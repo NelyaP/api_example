@@ -5,7 +5,7 @@ from .models import User, Report, Order, \
     PermissionSerializer, GroupSerializer
 
 from django.contrib.auth.models import Group, Permission
-from .serializers import UserSerializer, ReportSerializer, OrderSerializer, 
+from .serializers import UserSerializer, ReportSerializer, OrderSerializer, GroupSerializer, PermissionSerializer
 
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
