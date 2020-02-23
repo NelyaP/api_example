@@ -11,6 +11,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         User = get_user_model()
         if not User.objects.filter(username=options['username']).exists():
-            User.objects.create_superuser(email=options['email'],
+            User.objects.create_superuser(username=options['username'],
                                           password=options['password'])
             self.stdout.write(self.style.SUCCESS('Superuser was created.'))
