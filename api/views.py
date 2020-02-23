@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from .models import User, Report, Order, \
-    OrderType, OrderStatus, \
-    PermissionSerializer, GroupSerializer
+    OrderType, OrderStatus
 
 from django.contrib.auth.models import Group, Permission
-from .serializers import UserSerializer, ReportSerializer, OrderSerializer, GroupSerializer, PermissionSerializer
+from .serializers import UserSerializer, ReportSerializer, OrderSerializer, \
+    GroupSerializer, PermissionSerializer
 
 class UserView(viewsets.ModelViewSet):
     queryset = User.objects.all()
