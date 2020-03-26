@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Report, Order, \
+from .models import User, Order, \
     OrderType, OrderStatus
 
 from django.contrib.auth.models import Group, Permission
@@ -17,11 +17,6 @@ class GroupSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     class Meta:        
         model = User        
-        fields = '__all__'
-
-class ReportSerializer(serializers.ModelSerializer):
-    class Meta:        
-        model = Report        
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
