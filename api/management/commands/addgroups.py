@@ -25,7 +25,7 @@ class Command(BaseCommand):
                     try:
                         model_add_perm = Permission.objects.get(codename=codename)
                     except Permission.DoesNotExist:
-                        logging.warning("Permission not found with name '{}'.".format(name))
+                        logging.warning("Permission not found with name '{}'.".format(codename))
                         continue
 
                     new_group.permissions.add(model_add_perm)        
