@@ -7,8 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 
 GROUPS = ['GUEST', 'SALES', 'REPORTER', ]
 MODELS = [
-    'user', 
-    'report', 
+    'account', 
     'order', 
     ]
 PERMISSIONS = ['view', 'add', 'change', ] 
