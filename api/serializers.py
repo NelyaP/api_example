@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Order, \
+from .models import Account, Order, \
     OrderType, OrderStatus
 
 from django.contrib.auth.models import Group, Permission
@@ -14,12 +14,67 @@ class GroupSerializer(serializers.ModelSerializer):
         model = Group
         fields = '__all__'
 
-class UserSerializer(serializers.ModelSerializer):
+class AccountSerializer(serializers.ModelSerializer):
     class Meta:        
-        model = User        
-        fields = '__all__'
+        model = Account        
+        fields = (
+            'username',
+            'phone',
+            'email',
+            'company',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'birthdate',
+            'is_active',
+            'is_staff',
+            'is_admin',
+            'is_superuser',
+            'created_at',
+            'updated_at'
+        )
+        read_only_fields = [ 'created_at', 'updated_at' ]
+
+
+class OrderTypeSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = OrderType        
+        fields = (
+            'id',
+            'code',
+            'name'
+        )       
+
+class OrderStatusSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = OrderStatus        
+        fields = (
+            'id',
+            'code',
+            'name'
+        )         
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Order        
-        fields = '__all__'
+        fields = (
+            'description',
+            'o_type',
+            'o_status',
+            'created_by',
+            'created_at'
+        )
+        read_only_fields = [ 'created_at' ]
+
+class OrderDetailedSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Order        
+        fields = (
+            'description',
+            'o_type',
+            'o_status',
+            'created_by',
+            'created_at'
+        )
+        depth = 1

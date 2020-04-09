@@ -76,7 +76,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'geo.wsgi.application'
-AUTH_USER_MODEL = 'api.User'
+AUTH_USER_MODEL = 'api.Account'
 
 
 # Database
@@ -136,4 +136,8 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated', ),
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication', )
+}
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'username',
 }
