@@ -79,4 +79,5 @@ class OrderDetailedSerializer(serializers.ModelSerializer):
             'created_by',
             'created_at'
         )
+        
         depth = 1
