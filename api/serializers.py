@@ -59,6 +59,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Order        
         fields = (
+            'id',
             'description',
             'o_type',
             'o_status',
@@ -71,6 +72,7 @@ class OrderDetailedSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Order        
         fields = (
+            'id',
             'description',
             'o_type',
             'o_status',
