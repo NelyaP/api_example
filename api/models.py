@@ -70,14 +70,14 @@ class Account(AbstractBaseUser):
 
 
 class OrderType(models.Model):
-    code = models.CharField(max_length=100)
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
 
 class OrderStatus(models.Model):
-    code = models.CharField(max_length=100)
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):

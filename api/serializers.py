@@ -64,7 +64,6 @@ class OrderTypeSerializer(serializers.ModelSerializer):
     class Meta:        
         model = OrderType        
         fields = (
-            'id',
             'code',
             'name'
         )       
@@ -73,7 +72,6 @@ class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:        
         model = OrderStatus        
         fields = (
-            'id',
             'code',
             'name'
         )         
@@ -102,5 +100,5 @@ class OrderDetailedSerializer(serializers.ModelSerializer):
             'created_by',
             'created_at'
         )
-        
+        read_only_fields = [ 'created_at' ]
         depth = 1
