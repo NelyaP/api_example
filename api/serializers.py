@@ -3,7 +3,7 @@ from .models import Account, Order, \
     OrderType, OrderStatus
 
 from django.contrib.auth.models import Group, Permission
-from django.contrib.auth.hashers import make_password
+#from django.contrib.auth.hashers import make_password
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
