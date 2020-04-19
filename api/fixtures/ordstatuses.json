@@ -1,7 +1,7 @@
 [
     {
         "model": "api.orderstatus", 
-        "pk": 1,
+        "pk": null,
         "fields": {
             "code": "created",
             "name": "Создан"
@@ -9,7 +9,7 @@
     },
     {
         "model": "api.orderstatus", 
-        "pk": 2,
+        "pk": null,
         "fields": {
             "code": "assigned",
             "name": "Назначен"
@@ -17,7 +17,7 @@
     },
     {
         "model": "api.orderstatus", 
-        "pk": 3,
+        "pk": null,
         "fields": {
             "code": "inprogress",
             "name": "В обработке"
@@ -25,7 +25,7 @@
     },
     {
         "model": "api.orderstatus", 
-        "pk": 4,
+        "pk": null,
         "fields": {
             "code": "done",
             "name": "Завершен"
@@ -33,7 +33,7 @@
     },
     {
         "model": "api.orderstatus", 
-        "pk": 5,
+        "pk": null,
         "fields": {
             "code": "canceled",
             "name": "Отменен"

@@ -1,7 +1,7 @@
 [
     {
         "model": "api.ordertype", 
-        "pk": 1,
+        "pk": null,
         "fields": {
             "code": "msk_mo_hj_zid_ts",
             "name": "Проживающие/работающие (Москва)"
@@ -9,7 +9,7 @@
     },
     {
         "model": "api.ordertype", 
-        "pk": 2,
+        "pk": null,
         "fields": {
             "code": "stg_half_hour_intervals",
             "name": "Получасовые интервалы (Москва и МО)"
