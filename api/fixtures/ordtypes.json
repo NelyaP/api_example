@@ -3,16 +3,16 @@
         "model": "api.ordertype", 
         "pk": 1,
         "fields": {
-            "code": "type1",
-            "name": "Тип 1"
+            "code": "msk_mo_hj_zid_ts",
+            "name": "Проживающие/работающие (Москва)"
         }
     },
     {
         "model": "api.ordertype", 
         "pk": 2,
         "fields": {
-            "code": "type2",
-            "name": "Тип 2"
+            "code": "stg_half_hour_intervals",
+            "name": "Получасовые интервалы (Москва и МО)"
         }
     }
 ]
