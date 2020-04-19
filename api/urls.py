@@ -9,14 +9,10 @@ router.register(r'users', AccountView)
 router.register(r'groups', GroupView)
 router.register(r'permissions', PermissionView)
 router.register(r'orders', OrderView)
-
-router_ord = routers.DefaultRouter()
-router_ord.register(r'details', OrderDetailedView)
-router_ord.register(r'types', OrderDetailedView)
-router_ord.register(r'statuses', OrderDetailedView)
-
+router.register(r'orders-details', OrderDetailedView)
+router.register(r'orders-types', OrderDetailedView)
+router.register(r'orders-statuses', OrderDetailedView)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('orders', include(router_ord.urls)),
 ]
