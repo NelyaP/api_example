@@ -3,6 +3,7 @@ from .models import Account, Order, \
     OrderType, OrderStatus
 
 from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.hashers import make_password
 
 class PermissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,6 +37,21 @@ class AccountSerializer(serializers.ModelSerializer):
         )
         read_only_fields = [ 'created_at', 'updated_at' ]
 
+class ChangePasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        help_text='Leave empty if no change needed',
+        style={'input_type': 'password', 'placeholder': 'Password'}
+    )
+    
+    class Meta:
+        model = Account
+        fields = ('username', 'password')
+
+    def create(self, validated_data):
+        validated_data['password'] = make_password(validated_data.get('password'))
+        return super(AccountSerializer, self).create(validated_data)
 
 class OrderTypeSerializer(serializers.ModelSerializer):
     class Meta:        

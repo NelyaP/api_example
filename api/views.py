@@ -8,7 +8,8 @@ from .models import Account, Order, \
     OrderType, OrderStatus
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
-    GroupSerializer, PermissionSerializer, OrderDetailedSerializer
+    GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
+    ChangePasswordSerializer
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
@@ -16,6 +17,10 @@ from django.contrib.auth import get_user_model
 class AccountView(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+class ChangePasswordView(viewsets.ModelViewSet):
+    queryset = Account.objects.all()
+    serializer_class = ChangePasswordSerializer
 
 class OrderView(viewsets.ModelViewSet):
     queryset = Order.objects.all()
