@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 from .views import AccountView, OrderView, GroupView, PermissionView, \
-    OrderDetailedView, ChangePasswordView
+    OrderDetailedView
 
 router = routers.DefaultRouter()
 
