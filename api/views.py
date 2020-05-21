@@ -31,6 +31,10 @@ class OrderView(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
+    def get_queryset(self):
+        queryset = Order.objects.filter(created_by=self.request.user)
+        return queryset
+
 class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderDetailedSerializer
