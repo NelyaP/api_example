@@ -60,7 +60,7 @@ def register(request):
     if not User.objects.filter(username=username).exists():
         User.objects.create_user(username=username, password=password, phone=phone, first_name=first_name, last_name=last_name, email=email, company=company)
         # send email
-        subject = ''
+        subject = 'Регистрация в приложении Геоаналитика'
         to_name = first_name + ' ' + last_name
         html = '<p>Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
         text = 'Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
