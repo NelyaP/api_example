@@ -13,6 +13,7 @@ from .serializers import AccountSerializer, OrderSerializer, \
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
+from utils.send_email import sp_send_simple_email
 
 class AccountView(viewsets.ModelViewSet):
     queryset = Account.objects.all()
@@ -59,6 +60,11 @@ def register(request):
     if not User.objects.filter(username=username).exists():
         User.objects.create_user(username=username, password=password, phone=phone, first_name=first_name, last_name=last_name, email=email, company=company)
         # send email
+        subject = ''
+        to_name = first_name + ' ' + last_name
+        html = '<p>Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
+        text = 'Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
+        sp_send_simple_email(subject, html, text, to_name, email)
         return Response(status=status.HTTP_201_CREATED)
     else:
         message = "user_exists"
