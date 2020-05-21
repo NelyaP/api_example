@@ -39,6 +39,10 @@ class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderDetailedSerializer
 
+    def get_queryset(self):
+        queryset = Order.objects.filter(created_by=self.request.user)
+        return queryset
+
 class GroupView(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
