@@ -89,3 +89,38 @@ class Order(models.Model):
     o_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE)
     created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
+
+class Age(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+class Gender(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+class Income(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+class Source(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+class Grid(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
