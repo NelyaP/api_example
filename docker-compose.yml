@@ -1,0 +1,51 @@
+version: '3.7'
+
+services:    
+  postgis:
+    image: postgis/postgis:latest
+    restart: unless-stopped
+    container_name: postgis
+    environment:
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_PASSWORD=${DB_PASSWORD}
+    - POSTGRES_DB=${DB_NAME}
+    ports:
+    - 5432:5432
+    volumes:
+    - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      postgis: {}
+
+  api_example:
+    image: api_example
+    build: .
+    restart: unless-stopped
+    container_name: api_example
+    environment:
+    - SUPER_USERNAME=${SUPER_USERNAME}
+    - SUPER_PASS=${SUPER_PASS}
+    - DB_HOST=${DB_HOST}
+    - DB_NAME=${DB_NAME}
+    - DB_USER=${DB_USER}
+    - DB_PASSWORD=${DB_PASSWORD}
+    - DB_PORT=${DB_PORT}
+    - DEBUG=${DEBUG}
+    - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+    - EMAIL_REST_API_ID=${EMAIL_REST_API_ID}
+    - EMAIL_REST_API_SECRET=${EMAIL_REST_API_SECRET}
+    - EMAIL_TOKEN_STORAGE=${EMAIL_TOKEN_STORAGE}
+    - EMAIL_SENDER_ID=${EMAIL_SENDER_ID}
+    - EMAIL_SENDER_NAME=${EMAIL_SENDER_NAME}
+    volumes:
+    - .:/code
+    ports:
+    - 8000:8000
+    networks:
+      postgis: {}
+
+networks:
+  postgis:
+    driver: bridge
+
+volumes:
+  postgis:
