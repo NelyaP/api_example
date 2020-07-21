@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Account, Order, \
-    OrderType, OrderStatus
+    OrderType, OrderStatus, Age, Gender, Income
 
 from django.contrib.auth.models import Group, Permission
 #from django.contrib.auth.hashers import make_password
@@ -60,6 +60,30 @@ class AccountSerializer(serializers.ModelSerializer):
             pass
         return account
 
+class AgeSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Age        
+        fields = (
+            'code',
+            'name'
+        )   
+
+class GenderSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Gender        
+        fields = (
+            'code',
+            'name'
+        )   
+
+class IncomeSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Income        
+        fields = (
+            'code',
+            'name'
+        )   
+
 class OrderTypeSerializer(serializers.ModelSerializer):
     class Meta:        
         model = OrderType        
@@ -81,24 +105,33 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order        
         fields = (
             'id',
-            'description',
             'o_type',
             'o_status',
+            'period',
+            'offer',
+            'amount',
+            'description',
             'created_by',
             'created_at'
         )
         read_only_fields = [ 'created_at' ]
 
 class OrderDetailedSerializer(serializers.ModelSerializer):
+    o_type = OrderTypeSerializer(many=False, read_only=True)
+    o_status = OrderStatusSerializer(many=False, read_only=True)
+    created_by = AccountSerializer(many=False, read_only=True)
+
     class Meta:        
         model = Order        
         fields = (
             'id',
-            'description',
             'o_type',
             'o_status',
+            'period',
+            'offer',
+            'amount',
+            'description',
             'created_by',
             'created_at'
         )
         read_only_fields = [ 'created_at' ]
-        depth = 1

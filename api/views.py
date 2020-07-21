@@ -5,11 +5,12 @@ from rest_framework.response import Response
 
 from django.contrib.auth.models import Group, Permission
 from .models import Account, Order, \
-    OrderType, OrderStatus
+    OrderType, OrderStatus, Age, Gender, Income
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
     GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
-        OrderTypeSerializer, OrderStatusSerializer
+        OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
+        GenderSerializer, IncomeSerializer
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
@@ -18,6 +19,18 @@ from utils.send_email import sp_send_simple_email
 class AccountView(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+class AgeView(viewsets.ModelViewSet):
+    queryset = Age.objects.all()
+    serializer_class = AgeSerializer
+
+class GenderView(viewsets.ModelViewSet):
+    queryset = Gender.objects.all()
+    serializer_class = GenderSerializer
+
+class IncomeView(viewsets.ModelViewSet):
+    queryset = Income.objects.all()
+    serializer_class = IncomeSerializer
 
 class OrderTypeView(viewsets.ModelViewSet):
     queryset = OrderType.objects.all()
@@ -34,6 +47,24 @@ class OrderView(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Order.objects.filter(created_by=self.request.user)
         return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def perform_update(self, serializer):
+        serializer.save(created_by=self.request.user)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
 class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()

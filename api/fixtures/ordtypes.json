@@ -4,15 +4,15 @@
         "pk": null,
         "fields": {
             "code": "msk_mo_hj_zid_ts",
-            "name": "Дом-работа (Москва)"
+            "name": "Численность населения"
         }
     },
     {
         "model": "api.ordertype", 
         "pk": null,
         "fields": {
-            "code": "stg_half_hour_intervals",
-            "name": "Получасовые интервалы (Москва и МО)"
+            "code": "dynamics_mskmo",
+            "name": "Динамика численности населения"
         }
     }
 ]

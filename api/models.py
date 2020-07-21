@@ -68,28 +68,6 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-
-class OrderType(models.Model):
-    code = models.CharField(primary_key=True, max_length=100, unique=True)
-    name = models.CharField(max_length=250)
-
-    def __str__(self):
-        return '{} / {}'.format(self.code, self.name)
-
-class OrderStatus(models.Model):
-    code = models.CharField(primary_key=True, max_length=100, unique=True)
-    name = models.CharField(max_length=250)
-
-    def __str__(self):
-        return '{} / {}'.format(self.code, self.name)
-
-class Order(models.Model):
-    description = models.TextField('Descr.', max_length=500, blank=True)
-    o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
-    o_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
-    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
-
 class Age(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
@@ -118,9 +96,27 @@ class Source(models.Model):
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
 
-class Grid(models.Model):
+
+class OrderType(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
+
+class OrderStatus(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+class Order(models.Model):
+    o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
+    o_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE)
+    period = models.PositiveSmallIntegerField('Period (month)', default=0)
+    offer = models.CharField('Offer', max_length=250, blank=True, null=True)
+    amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, blank=True, null=True)
+    description = models.TextField('Descr.', max_length=500, blank=True, null=True)
+    created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
+    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
