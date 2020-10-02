@@ -5,20 +5,28 @@ from rest_framework.response import Response
 
 from django.contrib.auth.models import Group, Permission
 from .models import Account, Order, \
-    OrderType, OrderStatus, Age, Gender, Income
+    OrderType, OrderStatus, Age, Gender, Income, City, AccountFilter
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
     GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
         OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
-        GenderSerializer, IncomeSerializer
+        GenderSerializer, IncomeSerializer, CitySerializer, AccountFilterSerializer
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
 from utils.send_email import sp_send_simple_email
 
+class CityView(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
 class AccountView(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
+
+class AccountFilterView(viewsets.ModelViewSet):
+    queryset = AccountFilter.objects.all()
+    serializer_class = AccountFilterSerializer
 
 class AgeView(viewsets.ModelViewSet):
     queryset = Age.objects.all()

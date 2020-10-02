@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework import routers
 from .views import AccountView, OrderView, GroupView, PermissionView, \
     OrderDetailedView, OrderTypeView, OrderStatusView, AgeView, GenderView, \
-    IncomeView
+    IncomeView, CityView, AccountFilterView
 
 router = routers.DefaultRouter()
 
@@ -16,6 +16,8 @@ router.register(r'orders', OrderView)
 router.register(r'ordersdt', OrderDetailedView)
 router.register(r'orderstp', OrderTypeView)
 router.register(r'ordersst', OrderStatusView)
+router.register(r'city', CityView)
+router.register(r'filter', AccountFilterView)
 
 urlpatterns = [
     path('', include(router.urls)),

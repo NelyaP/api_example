@@ -32,6 +32,19 @@ class AccountManager(BaseUserManager):
 
         return self._create_user(username, password, **extra_fields)
 
+class City(models.Model):
+    id_ref = models.IntegerField('ID Ref') 
+    name_ref = models.CharField('Name Ref', max_length=250)
+    table_ref = models.CharField('Table Ref', max_length=250)
+    grid = models.CharField('Grid', max_length=250)
+    centroid_lat = models.CharField('Latitude', max_length=20, blank=True, null=True)
+    centroid_lon = models.CharField('Longitude', max_length=20, blank=True, null=True)
+    is_active = models.BooleanField(default=True)  
+    is_demo = models.BooleanField(default=False)  
+
+    def __str__(self):
+        return self.name_ref
+
 class Account(AbstractBaseUser):
     GENDER_CHOICES = (
         ('M', 'Female'),
@@ -42,11 +55,14 @@ class Account(AbstractBaseUser):
     phone = models.CharField('Mob. phone', max_length=50, blank=True, null=True)
     email = models.EmailField('E-mail', max_length=500, unique=True, blank=True, null=True)
     company = models.CharField('Company', max_length=250, blank=True, null=True)
+    alias_name = models.CharField('Alias name', max_length=500, blank=True, null=True)
     first_name = models.CharField('First name', max_length=50, blank=True, null=True)
     last_name = models.CharField('Last name', max_length=50, blank=True, null=True)
     middle_name = models.CharField('Middle name', max_length=50, blank=True, null=True)
     gender = models.CharField('Gender', max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     birthdate = models.DateField('Date of birth', blank=True, null=True)
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    is_allowed = models.BooleanField(default=False)  
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
     updated_at = models.DateTimeField('Last update', auto_now=True, null=True)
     is_active = models.BooleanField(default=True)                                   # for all users
@@ -67,6 +83,24 @@ class Account(AbstractBaseUser):
     
     def has_module_perms(self, app_label):
         return True
+
+class AccountFilter(models.Model):
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
+    save_type = models.CharField('Save type', max_length=250)
+    is_tuted = models.BooleanField(default=False)  
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    poi = models.CharField('Poi', max_length=250, blank=True, null=True)
+    layer = models.CharField('Layer', max_length=250, blank=True, null=True)
+    option = models.CharField('Option', max_length=250, blank=True, null=True)
+    month = models.CharField('Month', max_length=250, blank=True, null=True)
+    ts = models.CharField('Ts partitions', max_length=500, blank=True, null=True)
+    gender = models.CharField('Gender range', max_length=250, blank=True, null=True)
+    age = models.CharField('Age range', max_length=250, blank=True, null=True)
+    income = models.CharField('Income range', max_length=250, blank=True, null=True)
+    count = models.CharField('Count range', max_length=250, blank=True, null=True)
+
+    def __str__(self):
+        return self.account + '/' + str(id)
 
 class Age(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)

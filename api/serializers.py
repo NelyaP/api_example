@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Account, Order, \
-    OrderType, OrderStatus, Age, Gender, Income
+    OrderType, OrderStatus, Age, Gender, Income, City, AccountFilter
 
 from django.contrib.auth.models import Group, Permission
 #from django.contrib.auth.hashers import make_password
@@ -14,6 +14,21 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = (
+            'id',
+            'id_ref',
+            'name_ref',
+            'table_ref',
+            'grid',
+            'centroid_lat',
+            'centroid_lon',
+            'is_active',
+            'is_demo'
+        )
 
 class AccountSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -31,11 +46,14 @@ class AccountSerializer(serializers.ModelSerializer):
             'phone',
             'email',
             'company',
+            'alias_name',
             'first_name',
             'last_name',
             'middle_name',
             'gender',
             'birthdate',
+            'city',
+            'is_allowed',
             'is_active',
             'is_staff',
             'is_admin',
@@ -135,3 +153,22 @@ class OrderDetailedSerializer(serializers.ModelSerializer):
             'created_at'
         )
         read_only_fields = [ 'created_at' ]
+
+class AccountFilterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountFilter
+        fields = (
+            'account',
+            'save_type', 
+            'is_tuted',
+            'city',
+            'poi', 
+            'layer', 
+            'option', 
+            'month',
+            'ts',
+            'gender', 
+            'age',
+            'income',
+            'count'
+        )
