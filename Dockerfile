@@ -1,9 +1,18 @@
 FROM python:3.8.5-slim
 ENV PYTHONUNBUFFERED 1
-COPY . /code
-WORKDIR /code
-RUN ls -la
-RUN chmod +x entrypoint.sh
-#RUN pip install --upgrade pip
+
+COPY requirements.txt /app/requirements.txt
+WORKDIR /app
+
 RUN pip install -r requirements.txt
-ENTRYPOINT ["/code/entrypoint.sh"]
+
+COPY api api
+COPY geo geo
+COPY utils utils
+COPY manage.py manage.py
+
+COPY entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+RUN ls -la
+
+ENTRYPOINT ["/app/entrypoint.sh"]

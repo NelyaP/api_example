@@ -17,7 +17,7 @@ services:
       postgis: {}
 
   api:
-    image: 119634/api_example:latest
+    image: api
     build: .
     restart: unless-stopped
     container_name: api
@@ -45,4 +45,4 @@ services:
 
 networks:
   postgis:
-    driver: bridge    
+    driver: bridge
