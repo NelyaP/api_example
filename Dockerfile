@@ -13,6 +13,5 @@ COPY manage.py manage.py
 
 COPY entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
-RUN ls -la
 
 ENTRYPOINT ["/app/entrypoint.sh"]

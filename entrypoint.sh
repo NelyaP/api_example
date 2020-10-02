@@ -1,5 +1,6 @@
 #!/usr/bin/env sh
 
+ls -la
 python manage.py waitdb
 python manage.py makemigrations
 python manage.py migrate
