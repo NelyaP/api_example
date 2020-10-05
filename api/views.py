@@ -94,29 +94,51 @@ class PermissionView(viewsets.ModelViewSet):
 @authentication_classes([])
 @permission_classes([])
 def register(request):
-    data = request.data
-    username = data["username"]
-    phone = data["phone"]
-    first_name = data["first_name"]
-    last_name = data["last_name"]
-    email = data["email"]
-    company = data["company"]
-    message = "Processing"
-    User = get_user_model()
-    password = generate_20char_pwd()
-    if not User.objects.filter(username=username).exists():
-        User.objects.create_user(username=username, password=password, phone=phone, first_name=first_name, last_name=last_name, email=email, company=company)
+    if not request.method == 'POST':
+        return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    if 'username' in request.data and request.data['username'] and \
+        'phone' in request.data and request.data['phone'] and \
+        'email' in request.data and request.data['email'] and \
+        'alias_name' in request.data and request.data['alias_name'] and \
+        'is_allowed' in request.data and request.data['is_allowed'] and \
+        'company' in request.data and request.data['company']:
+
+        username = request.data['username']
+        phone = request.data['phone']
+        email = request.data['email']
+        alias_name = request.data['alias_name']
+        first_name = None
+        if 'first_name' in request.data and request.data['first_name']:
+            first_name = request.data['first_name']
+        last_name = None
+        if 'last_name' in request.data and request.data['last_name']:
+            last_name = request.data['last_name']
+        month = None
+        if 'month' in request.data and request.data['month']:
+            last_name = request.data['month']
+        is_allowed = request.data['is_allowed']
+        company = request.data['company']
+
+        User = get_user_model()
+        password = generate_20char_pwd()
+        if User.objects.filter(username=username).exists():
+            return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
+
+        User.objects.create_user(
+            username=username, 
+            password=password, 
+            phone=phone, 
+            alias_name=alias_name, 
+            first_name=first_name, 
+            last_name=last_name, 
+            email=email, 
+            month=month,
+            is_allowed=is_allowed,
+            company=company)
         # send email
         subject = 'Регистрация в приложении Геоаналитика'
-        to_name = first_name + ' ' + last_name
-        html = '<p>Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
-        text = 'Уважаемый, ' + to_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
-        sp_send_simple_email(subject, html, text, to_name, email)
-        return Response(status=status.HTTP_201_CREATED)
-    else:
-        message = "user_exists"
-
-    err = {
-        "error": message
-    }
-    return Response(err, status=status.HTTP_400_BAD_REQUEST)
+        html = '<p>Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
+        text = 'Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
+        sp_send_simple_email(subject, html, text, alias_name, email)
+        return Response({"message": "User registared successfully"},status=status.HTTP_201_CREATED)

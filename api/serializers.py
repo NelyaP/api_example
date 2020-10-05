@@ -17,7 +17,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Group
+        model = City
         fields = (
             'id',
             'id_ref',
@@ -52,7 +52,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'middle_name',
             'gender',
             'birthdate',
-            'city',
+            'month',
             'is_allowed',
             'is_active',
             'is_staff',
