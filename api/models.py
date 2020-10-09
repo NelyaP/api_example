@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser, BaseUserManager
 )
 
+
 class AccountManager(BaseUserManager):
     def _create_user(self, username, password, **extra_fields):
         if not username:
@@ -32,23 +33,17 @@ class AccountManager(BaseUserManager):
 
         return self._create_user(username, password, **extra_fields)
 
-class City(models.Model):
-    id_ref = models.IntegerField('ID Ref') 
-    name_ref = models.CharField('Name Ref', max_length=250)
-    table_ref = models.CharField('Table Ref', max_length=250)
-    grid = models.CharField('Grid', max_length=250)
-    centroid_lat = models.CharField('Latitude', max_length=20, blank=True, null=True)
-    centroid_lon = models.CharField('Longitude', max_length=20, blank=True, null=True)
-    is_active = models.BooleanField(default=True)  
-    is_demo = models.BooleanField(default=False)  
-
-    def __str__(self):
-        return self.name_ref
 
 class Account(AbstractBaseUser):
     GENDER_CHOICES = (
         ('M', 'Female'),
         ('F', 'Male'),
+    )
+
+    ROLES_CHOICES = (
+        ('trial', 'Trial'),
+        ('user', 'User'),
+        ('master', 'Master'),
     )
 
     username = models.CharField(primary_key=True, max_length=100, unique=True)
@@ -61,11 +56,15 @@ class Account(AbstractBaseUser):
     middle_name = models.CharField('Middle name', max_length=50, blank=True, null=True)
     gender = models.CharField('Gender', max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     birthdate = models.DateField('Date of birth', blank=True, null=True)
-    month = models.CharField('Month', max_length=500, blank=True, null=True)
-    is_allowed = models.BooleanField(default=False)  
+    #month = models.CharField('Month', max_length=500, blank=True, null=True)
+    is_allowed = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    active_from = models.DateTimeField('Active: From', blank=True, null=True)
+    active_to = models.DateTimeField('Active: To', blank=True, null=True)
+    role = models.CharField('Role', max_length=20, choices=ROLES_CHOICES, blank=True, null=True)
+    tuturial_passed = models.BooleanField(default=False) 
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True)
     updated_at = models.DateTimeField('Last update', auto_now=True, null=True)
-    is_active = models.BooleanField(default=True)                                   # for all users
     is_staff = models.BooleanField(default=False)                                   # for all stuff
     is_admin = models.BooleanField(default=False)                                   # admin
     is_superuser = models.BooleanField(default=False)  
@@ -84,10 +83,24 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+
+class City(models.Model):
+    id_ref = models.IntegerField('ID Ref') 
+    name_ref = models.CharField('Name Ref', max_length=250)
+    table_ref = models.CharField('Table Ref', max_length=250)
+    grid = models.CharField('Grid', max_length=250)
+    centroid_lat = models.CharField('Latitude', max_length=20, blank=True, null=True)
+    centroid_lon = models.CharField('Longitude', max_length=20, blank=True, null=True)
+    is_active = models.BooleanField(default=True)  
+    is_demo = models.BooleanField(default=False)  
+
+    def __str__(self):
+        return self.name_ref
+
+
 class AccountFilter(models.Model):
     account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    save_type = models.CharField('Save type', max_length=250)
-    is_tuted = models.BooleanField(default=False)  
+    save_type = models.CharField('Save type', max_length=250) 
     city = models.ForeignKey(City, on_delete=models.PROTECT)
     poi = models.CharField('Poi', max_length=250, blank=True, null=True)
     layer = models.CharField('Layer', max_length=250, blank=True, null=True)
@@ -102,12 +115,14 @@ class AccountFilter(models.Model):
     def __str__(self):
         return self.account + '/' + str(id)
 
+
 class Age(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
+
 
 class Gender(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
@@ -116,12 +131,14 @@ class Gender(models.Model):
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
 
+
 class Income(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
+
 
 class Source(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
@@ -138,12 +155,14 @@ class OrderType(models.Model):
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
 
+
 class OrderStatus(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
+
 
 class Order(models.Model):
     o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
@@ -154,3 +173,6 @@ class Order(models.Model):
     description = models.TextField('Descr.', max_length=500, blank=True, null=True)
     created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
     created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
+
+    def __str__(self):
+        return 'Order #{}'.format(str(self.id))
