@@ -56,7 +56,6 @@ class Account(AbstractBaseUser):
     middle_name = models.CharField('Middle name', max_length=50, blank=True, null=True)
     gender = models.CharField('Gender', max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     birthdate = models.DateField('Date of birth', blank=True, null=True)
-    #month = models.CharField('Month', max_length=500, blank=True, null=True)
     is_allowed = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     active_from = models.DateTimeField('Active: From', blank=True, null=True)

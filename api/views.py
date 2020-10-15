@@ -16,6 +16,8 @@ from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
 from utils.send_email import sp_send_simple_email
 
+import random
+
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
@@ -119,48 +121,65 @@ def register(request):
     if not request.method == 'POST':
         return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
     
-    if 'username' in request.data and request.data['username'] and \
-        'phone' in request.data and request.data['phone'] and \
-        'email' in request.data and request.data['email'] and \
-        'alias_name' in request.data and request.data['alias_name'] and \
-        'is_allowed' in request.data and request.data['is_allowed'] and \
-        'company' in request.data and request.data['company']:
+    if not 'phone' in request.data \
+        or not request.data['phone'] \
+        or not 'email' in request.data \
+        or not request.data['email'] \
+        or not 'alias_name' in request.data \
+        or not request.data['alias_name'] \
+        or not 'is_allowed' in request.data \
+        or not request.data['is_allowed'] \
+        or not 'company' in request.data \
+        or not request.data['company']:
+        
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
-        username = request.data['username']
-        phone = request.data['phone']
-        email = request.data['email']
-        alias_name = request.data['alias_name']
-        first_name = None
-        if 'first_name' in request.data and request.data['first_name']:
-            first_name = request.data['first_name']
-        last_name = None
-        if 'last_name' in request.data and request.data['last_name']:
-            last_name = request.data['last_name']
-        month = None
-        if 'month' in request.data and request.data['month']:
-            last_name = request.data['month']
-        is_allowed = request.data['is_allowed']
-        company = request.data['company']
+    phone = request.data['phone']
+    email = request.data['email']
+    alias_name = request.data['alias_name']
+    first_name = None
+    if 'first_name' in request.data and request.data['first_name']:
+        first_name = request.data['first_name']
+    last_name = None
+    if 'last_name' in request.data and request.data['last_name']:
+        last_name = request.data['last_name']
+    is_allowed = request.data['is_allowed']
+    company = request.data['company']
+    
+    User = get_user_model()
+    if User.objects.filter(phone=phone).exists():
+        return Response({"message": "This phone number is already in use"}, status=status.HTTP_400_BAD_REQUEST)
 
-        User = get_user_model()
-        password = generate_20char_pwd()
-        if User.objects.filter(username=username).exists():
-            return Response({"message": "User already exists"}, status=status.HTTP_400_BAD_REQUEST)
+    if User.objects.filter(email=email).exists():
+        return Response({"message": "This email is already in use"}, status=status.HTTP_400_BAD_REQUEST)
 
-        User.objects.create_user(
-            username=username, 
-            password=password, 
-            phone=phone, 
-            alias_name=alias_name, 
-            first_name=first_name, 
-            last_name=last_name, 
-            email=email, 
-            month=month,
-            is_allowed=is_allowed,
-            company=company)
-        # send email
-        subject = 'Регистрация в приложении Геоаналитика'
-        html = '<p>Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
-        text = 'Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
-        sp_send_simple_email(subject, html, text, alias_name, email)
-        return Response({"message": "User registared successfully"},status=status.HTTP_201_CREATED)
+    found = False
+    for _ in range(10):
+        # Generate username
+        username_int = f"{random.randint(1, 9999999):07d}"
+        username = 'U{}'.format(username_int)
+        if not User.objects.filter(username=username).exists():
+            found = True
+            break
+
+    if not found:
+        return Response({"message": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
+
+    password = generate_20char_pwd()
+    User.objects.create_user(
+        username=username, 
+        password=password, 
+        phone=phone, 
+        alias_name=alias_name, 
+        first_name=first_name, 
+        last_name=last_name, 
+        email=email, 
+        is_allowed=is_allowed,
+        company=company)
+    # send email
+    subject = 'Регистрация в приложении Геоаналитика'
+    html = '<p>Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '.</p>'
+    text = 'Уважаемый, ' + alias_name + '! Ваш логин: ' + username + ', пароль: ' + password + '. '
+    sp_send_simple_email(subject, html, text, alias_name, email)
+
+    return Response({"message": "User registared successfully"},status=status.HTTP_201_CREATED)

@@ -52,7 +52,6 @@ class AccountSerializer(serializers.ModelSerializer):
             'middle_name',
             'gender',
             'birthdate',
-            #'month',
             'is_allowed',
             'is_active',
             'active_from',
