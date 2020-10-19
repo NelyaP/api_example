@@ -4,13 +4,14 @@ from rest_framework.decorators import action, api_view, authentication_classes, 
 from rest_framework.response import Response
 
 from django.contrib.auth.models import Group, Permission
-from .models import Account, Order, \
-    OrderType, OrderStatus, Age, Gender, Income, City, AccountFilter
+from .models import Account, Order, OrderType, OrderStatus, \
+    Age, Gender, Income, City, AccountFilter, SourceProp, OrderItem
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
     GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
-        OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
-        GenderSerializer, IncomeSerializer, CitySerializer, AccountFilterSerializer
+    OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
+    GenderSerializer, IncomeSerializer, CitySerializer, \
+    AccountFilterSerializer, SourcePropSerializer, OrderItemSerializer
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
@@ -98,6 +99,10 @@ class OrderView(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data)
 
+class OrderItemView(viewsets.ModelViewSet):
+    queryset = OrderItem.objects.all()
+    serializer_class = OrderItemSerializer
+
 class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderDetailedSerializer
@@ -105,6 +110,10 @@ class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         queryset = Order.objects.filter(created_by=self.request.user)
         return queryset
+
+class SourcePropView(viewsets.ModelViewSet):
+    queryset = SourceProp.objects.all()
+    serializer_class = SourcePropSerializer
 
 class GroupView(viewsets.ModelViewSet):
     queryset = Group.objects.all()
@@ -156,14 +165,16 @@ def register(request):
     found = False
     for _ in range(10):
         # Generate username
+        print('tick')
         username_int = f"{random.randint(1, 9999999):07d}"
         username = 'U{}'.format(username_int)
         if not User.objects.filter(username=username).exists():
             found = True
+            print('found-', username)
             break
 
     if not found:
-        return Response({"message": "Something went wrong"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"message": "Generation of new login has been failed"}, status=status.HTTP_400_BAD_REQUEST)
 
     password = generate_20char_pwd()
     User.objects.create_user(

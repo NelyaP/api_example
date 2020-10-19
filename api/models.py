@@ -90,6 +90,7 @@ class City(models.Model):
     grid = models.CharField('Grid', max_length=250)
     centroid_lat = models.CharField('Latitude', max_length=20, blank=True, null=True)
     centroid_lon = models.CharField('Longitude', max_length=20, blank=True, null=True)
+    category = models.SmallIntegerField('Category', blank=True, null=True)
     is_active = models.BooleanField(default=True)  
     is_demo = models.BooleanField(default=False)  
 
@@ -115,6 +116,52 @@ class AccountFilter(models.Model):
         return self.account + '/' + str(id)
 
 
+class OrderType(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+
+class OrderStatus(models.Model):
+    code = models.CharField(primary_key=True, max_length=100, unique=True)
+    name = models.CharField(max_length=250)
+
+    def __str__(self):
+        return '{} / {}'.format(self.code, self.name)
+
+
+class Order(models.Model):
+    o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
+    o_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE)
+    amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, blank=True, null=True)
+    discount_amount = models.DecimalField('Discount Amount', max_digits=10, decimal_places=2, blank=True, null=True)
+    description = models.TextField('Descr.', max_length=500, blank=True, null=True)
+    created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
+    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
+
+    def __str__(self):
+        return 'Order #{}'.format(str(self.id))
+
+    @property
+    def items(self):
+        return self.orderitem_set.all()
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.PROTECT)
+    city = models.ForeignKey(City, on_delete=models.PROTECT)
+    time_slot_from = models.IntegerField('Time slot (From)') 
+    time_slot_to = models.IntegerField('Time slot (To)') 
+    filters_lst = models.CharField('Chosen filters', max_length=500, blank=True, null=True)
+    poi_lst = models.CharField('Chosen POI', max_length=500, blank=True, null=True)
+
+    def __str__(self):
+        return 'Order item #{}'.format(str(self.id))
+
+
+# Filters #
 class Age(models.Model):
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
@@ -139,39 +186,15 @@ class Income(models.Model):
         return '{} / {}'.format(self.code, self.name)
 
 
-class Source(models.Model):
-    code = models.CharField(primary_key=True, max_length=100, unique=True)
-    name = models.CharField(max_length=250)
+class SourceProp(models.Model):
+    PERIOD_CHOICES = (
+        ('1mth', '1 месяц'),
+        ('30min', '30 минут')
+    )
+    table_ref = models.CharField('Table Ref', max_length=250)
+    name_ref = models.CharField('Name Ref', max_length=250)
+    count_dt = models.DateField('Count Date')
+    period = models.CharField('Period', max_length=20, choices=PERIOD_CHOICES)
 
     def __str__(self):
-        return '{} / {}'.format(self.code, self.name)
-
-
-class OrderType(models.Model):
-    code = models.CharField(primary_key=True, max_length=100, unique=True)
-    name = models.CharField(max_length=250)
-
-    def __str__(self):
-        return '{} / {}'.format(self.code, self.name)
-
-
-class OrderStatus(models.Model):
-    code = models.CharField(primary_key=True, max_length=100, unique=True)
-    name = models.CharField(max_length=250)
-
-    def __str__(self):
-        return '{} / {}'.format(self.code, self.name)
-
-
-class Order(models.Model):
-    o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
-    o_status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE)
-    period = models.PositiveSmallIntegerField('Period (month)', default=0)
-    offer = models.CharField('Offer', max_length=250, blank=True, null=True)
-    amount = models.DecimalField('Amount', max_digits=10, decimal_places=2, blank=True, null=True)
-    description = models.TextField('Descr.', max_length=500, blank=True, null=True)
-    created_by = models.ForeignKey(Account, on_delete=models.CASCADE)
-    created_at = models.DateTimeField('Created at', auto_now_add=True, null=True) 
-
-    def __str__(self):
-        return 'Order #{}'.format(str(self.id))
+        return '{} / {}'.format(self.table_ref, self.name_ref)

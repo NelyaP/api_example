@@ -3,12 +3,13 @@
         "model": "api.city", 
         "pk": 1,
         "fields": {
-            "id_ref": 1,
+            "id_ref": 0,
             "name_ref": "Москва",
-            "table_ref": "ika_popul_msk",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c0",
+            "grid": "tl_grid_250",
             "centroid_lat": "55.751244",
             "centroid_lon": "37.618423",
+            "category": 99,
             "is_active": true,
             "is_demo": true
         }
@@ -17,12 +18,13 @@
         "model": "api.city", 
         "pk": 2,
         "fields": {
-            "id_ref": 2,
+            "id_ref": 1,
             "name_ref": "Санкт-Петербург",
-            "table_ref": "ika_popul_2",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c1",
+            "grid": "tl_grid_250",
             "centroid_lat": "59.9342802",
             "centroid_lon": "30.3350986",
+            "category": 98,
             "is_active": false,
             "is_demo": false
         }
@@ -31,12 +33,13 @@
         "model": "api.city", 
         "pk": 3,
         "fields": {
-            "id_ref": 3,
+            "id_ref": 2,
             "name_ref": "Воронеж",
-            "table_ref": "ika_popul_vor",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c2",
+            "grid": "tl_grid_250",
             "centroid_lat": "51.661535",
             "centroid_lon": "39.200287",
+            "category": 1,
             "is_active": true,
             "is_demo": true
         }
@@ -45,12 +48,13 @@
         "model": "api.city", 
         "pk": 4,
         "fields": {
-            "id_ref": 4,
+            "id_ref": 3,
             "name_ref": "Нижний Новгород",
-            "table_ref": "ika_popul_4",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c3",
+            "grid": "tl_grid_250",
             "centroid_lat": "56.2965039",
             "centroid_lon": "43.9360589",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -59,12 +63,13 @@
         "model": "api.city", 
         "pk": 5,
         "fields": {
-            "id_ref": 5,
+            "id_ref": 4,
             "name_ref": "Екатеринбург",
-            "table_ref": "ika_popul_5",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c4",
+            "grid": "tl_grid_250",
             "centroid_lat": "56.8389261",
             "centroid_lon": "60.6057025",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -73,12 +78,13 @@
         "model": "api.city", 
         "pk": 6,
         "fields": {
-            "id_ref": 6,
+            "id_ref": 5,
             "name_ref": "Уфа",
-            "table_ref": "ika_popul_6",
-            "grid": "grid_v",
-            "centroid_lat": "",
-            "centroid_lon": "",
+            "table_ref": "tl_agg_pop_c5",
+            "grid": "tl_grid_250",
+            "centroid_lat": "54.738762",
+            "centroid_lon": "55.972054",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -87,12 +93,13 @@
         "model": "api.city", 
         "pk": 7,
         "fields": {
-            "id_ref": 7,
+            "id_ref": 6,
             "name_ref": "Волгоград",
-            "table_ref": "ika_popul_7",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c6",
+            "grid": "tl_grid_250",
             "centroid_lat": "48.71939",
             "centroid_lon": "44.50183",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -101,12 +108,13 @@
         "model": "api.city", 
         "pk": 8,
         "fields": {
-            "id_ref": 8,
+            "id_ref": 7,
             "name_ref": "Ростов-На-Дону",
-            "table_ref": "ika_popul_8",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c7",
+            "grid": "tl_grid_250",
             "centroid_lat": "47.2357137",
             "centroid_lon": "39.701505",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -117,10 +125,11 @@
         "fields": {
             "id_ref": 9,
             "name_ref": "Казань",
-            "table_ref": "ika_popul_9",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c9",
+            "grid": "tl_grid_250",
             "centroid_lat": "55.8304307",
             "centroid_lon": "49.0660806",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -131,10 +140,11 @@
         "fields": {
             "id_ref": 10,
             "name_ref": "Новосибирск",
-            "table_ref": "ika_popul_10",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c10",
+            "grid": "tl_grid_250",
             "centroid_lat": "55.0083526",
             "centroid_lon": "82.9357327",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -145,10 +155,11 @@
         "fields": {
             "id_ref": 11,
             "name_ref": "Омск",
-            "table_ref": "ika_popul_11",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c11",
+            "grid": "tl_grid_250",
             "centroid_lat": "54.988480",
             "centroid_lon": "73.324236",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -159,10 +170,11 @@
         "fields": {
             "id_ref": 12,
             "name_ref": "Красноярск",
-            "table_ref": "ika_popul_12",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c12",
+            "grid": "tl_grid_250",
             "centroid_lat": "56.0152834",
             "centroid_lon": "92.8932476",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -173,10 +185,11 @@
         "fields": {
             "id_ref": 13,
             "name_ref": "Челябинск",
-            "table_ref": "ika_popul_13",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c13",
+            "grid": "tl_grid_250",
             "centroid_lat": "55.1644419",
             "centroid_lon": "61.4368431",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -187,10 +200,11 @@
         "fields": {
             "id_ref": 14,
             "name_ref": "Пермь",
-            "table_ref": "ika_popul_14",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c14",
+            "grid": "tl_grid_250",
             "centroid_lat": "58.0296813",
             "centroid_lon": "56.2667916",
+            "category": 1,
             "is_active": false,
             "is_demo": false
         }
@@ -199,12 +213,13 @@
         "model": "api.city", 
         "pk": 15,
         "fields": {
-            "id_ref": 1,
+            "id_ref": 15,
             "name_ref": "Ярославль",
-            "table_ref": "ika_popul_15",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c15",
+            "grid": "tl_grid_500",
             "centroid_lat": "57.6532609",
             "centroid_lon": "39.7531830",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -215,10 +230,11 @@
         "fields": {
             "id_ref": 16,
             "name_ref": "Рязань",
-            "table_ref": "ika_popul_16",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c16",
+            "grid": "tl_grid_500",
             "centroid_lat": "54.6095418",
             "centroid_lon": "39.7125857",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -229,10 +245,11 @@
         "fields": {
             "id_ref": 17,
             "name_ref": "Краснодар",
-            "table_ref": "ika_popul_17",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c17",
+            "grid": "tl_grid_500",
             "centroid_lat": "45.033333",
             "centroid_lon": "38.966667",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -243,10 +260,11 @@
         "fields": {
             "id_ref": 18,
             "name_ref": "Тольятти",
-            "table_ref": "ika_popul_18",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c18",
+            "grid": "tl_grid_500",
             "centroid_lat": "53.5086002",
             "centroid_lon": "49.4198344",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -257,10 +275,11 @@
         "fields": {
             "id_ref": 19,
             "name_ref": "Астрахань",
-            "table_ref": "ika_popul_19",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c19",
+            "grid": "tl_grid_500",
             "centroid_lat": "46.3588045",
             "centroid_lon": "48.0599345",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -271,10 +290,11 @@
         "fields": {
             "id_ref": 20,
             "name_ref": "Барнаул",
-            "table_ref": "ika_popul_20",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c20",
+            "grid": "tl_grid_500",
             "centroid_lat": "53.334529",
             "centroid_lon": "83.5755141",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -285,10 +305,11 @@
         "fields": {
             "id_ref": 21,
             "name_ref": "Иркутск",
-            "table_ref": "ika_popul_21",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c21",
+            "grid": "tl_grid_500",
             "centroid_lat": "52.286974",
             "centroid_lon": "104.305018",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -297,12 +318,13 @@
         "model": "api.city", 
         "pk": 22,
         "fields": {
-            "id_ref": 1,
+            "id_ref": 22,
             "name_ref": "Кемерово",
-            "table_ref": "ika_popul_22",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c22",
+            "grid": "tl_grid_500",
             "centroid_lat": "55.3501872",
             "centroid_lon": "86.0422866",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -311,12 +333,13 @@
         "model": "api.city", 
         "pk": 23,
         "fields": {
-            "id_ref": 1,
+            "id_ref": 23,
             "name_ref": "Владивосток",
-            "table_ref": "ika_popul_23",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c23",
+            "grid": "tl_grid_500",
             "centroid_lat": "43.1344454",
             "centroid_lon": "131.8963713",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -328,9 +351,10 @@
             "id_ref": 24,
             "name_ref": "Саратов",
             "table_ref": "ika_popul_24",
-            "grid": "grid_v",
+            "grid": "tl_grid_500",
             "centroid_lat": "51.5563789",
             "centroid_lon": "45.9798167",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -341,10 +365,11 @@
         "fields": {
             "id_ref": 25,
             "name_ref": "Томск",
-            "table_ref": "ika_popul_25",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c25",
+            "grid": "tl_grid_500",
             "centroid_lat": "56.5010397",
             "centroid_lon": "84.9924506",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -355,10 +380,11 @@
         "fields": {
             "id_ref": 26,
             "name_ref": "Ульяновск",
-            "table_ref": "ika_popul_26",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c26",
+            "grid": "tl_grid_500",
             "centroid_lat": "54.2799054",
             "centroid_lon": "48.2448948",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -369,10 +395,11 @@
         "fields": {
             "id_ref": 27,
             "name_ref": "Ижевск",
-            "table_ref": "ika_popul_27",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c27",
+            "grid": "tl_grid_500",
             "centroid_lat": "56.8618601",
             "centroid_lon": "53.2324285",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -383,10 +410,11 @@
         "fields": {
             "id_ref": 28,
             "name_ref": "Махачкала",
-            "table_ref": "ika_popul_28",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c28",
+            "grid": "tl_grid_500",
             "centroid_lat": "42.9949895",
             "centroid_lon": "47.5063602",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -397,10 +425,11 @@
         "fields": {
             "id_ref": 29,
             "name_ref": "Пенза",
-            "table_ref": "ika_popul_29",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c29",
+            "grid": "tl_grid_500",
             "centroid_lat": "53.2272903",
             "centroid_lon": "45",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -411,10 +440,11 @@
         "fields": {
             "id_ref": 30,
             "name_ref": "Киров",
-            "table_ref": "ika_popul_30",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c30",
+            "grid": "tl_grid_500",
             "centroid_lat": "58.5854674",
             "centroid_lon": "49.4316504",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -425,10 +455,11 @@
         "fields": {
             "id_ref": 31,
             "name_ref": "Оренбург",
-            "table_ref": "ika_popul_31",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c31",
+            "grid": "tl_grid_500",
             "centroid_lat": "51.7666482",
             "centroid_lon": "55.1004538",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -439,10 +470,11 @@
         "fields": {
             "id_ref": 32,
             "name_ref": "Липецк",
-            "table_ref": "ika_popul_32",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c32",
+            "grid": "tl_grid_500",
             "centroid_lat": "52.5983509",
             "centroid_lon": "39.5380214",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -453,10 +485,11 @@
         "fields": {
             "id_ref": 33,
             "name_ref": "Тюмень",
-            "table_ref": "ika_popul_33",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c33",
+            "grid": "tl_grid_500",
             "centroid_lat": "57.1612975",
             "centroid_lon": "65.5250172",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -467,10 +500,11 @@
         "fields": {
             "id_ref": 34,
             "name_ref": "Новокузнецк",
-            "table_ref": "ika_popul_34",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c34",
+            "grid": "tl_grid_500",
             "centroid_lat": "53.7595935",
             "centroid_lon": "87.1215705",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -481,10 +515,11 @@
         "fields": {
             "id_ref": 35,
             "name_ref": "Хабаровск",
-            "table_ref": "ika_popul_35",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c35",
+            "grid": "tl_grid_500",
             "centroid_lat": "48.4787964",
             "centroid_lon": "135.0450285",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }
@@ -495,10 +530,26 @@
         "fields": {
             "id_ref": 36,
             "name_ref": "Набережные челны",
-            "table_ref": "ika_popul_36",
-            "grid": "grid_v",
+            "table_ref": "tl_agg_pop_c36",
+            "grid": "tl_grid_500",
             "centroid_lat": "55.7149287",
             "centroid_lon": "52.2994413",
+            "category": 2,
+            "is_active": false,
+            "is_demo": false
+        }
+    },
+    {
+        "model": "api.city", 
+        "pk": 37,
+        "fields": {
+            "id_ref": 8,
+            "name_ref": "Самара",
+            "table_ref": "tl_agg_pop_c8",
+            "grid": "tl_grid_250",
+            "centroid_lat": "53.202778",
+            "centroid_lon": "50.140833",
+            "category": 2,
             "is_active": false,
             "is_demo": false
         }

@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Account, Order, \
-    OrderType, OrderStatus, Age, Gender, Income, City, AccountFilter
+from .models import Account, Order, OrderItem, \
+    OrderType, OrderStatus, Age, Gender, Income, \
+    City, AccountFilter, SourceProp
 
 from django.contrib.auth.models import Group, Permission
 #from django.contrib.auth.hashers import make_password
@@ -10,10 +11,12 @@ class PermissionSerializer(serializers.ModelSerializer):
         model = Permission
         fields = '__all__'
 
+
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = '__all__'
+
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,9 +29,11 @@ class CitySerializer(serializers.ModelSerializer):
             'grid',
             'centroid_lat',
             'centroid_lon',
+            'category',
             'is_active',
             'is_demo'
         )
+
 
 class AccountSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -81,29 +86,6 @@ class AccountSerializer(serializers.ModelSerializer):
             pass
         return account
 
-class AgeSerializer(serializers.ModelSerializer):
-    class Meta:        
-        model = Age        
-        fields = (
-            'code',
-            'name'
-        )   
-
-class GenderSerializer(serializers.ModelSerializer):
-    class Meta:        
-        model = Gender        
-        fields = (
-            'code',
-            'name'
-        )   
-
-class IncomeSerializer(serializers.ModelSerializer):
-    class Meta:        
-        model = Income        
-        fields = (
-            'code',
-            'name'
-        )   
 
 class OrderTypeSerializer(serializers.ModelSerializer):
     class Meta:        
@@ -113,6 +95,7 @@ class OrderTypeSerializer(serializers.ModelSerializer):
             'name'
         )       
 
+
 class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:        
         model = OrderStatus        
@@ -121,6 +104,7 @@ class OrderStatusSerializer(serializers.ModelSerializer):
             'name'
         )         
 
+
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:        
         model = Order        
@@ -128,30 +112,42 @@ class OrderSerializer(serializers.ModelSerializer):
             'id',
             'o_type',
             'o_status',
-            'period',
-            'offer',
             'amount',
+            'discount_amount',
             'description',
             'created_by',
             'created_at'
         )
         read_only_fields = [ 'created_at' ]
 
+
+class OrderItemSerializer(serializers.ModelSerializer):
+    model = OrderItem
+    fields = (
+        'id',
+        'city',
+        'time_slot_from',
+        'time_slot_to',
+        'filters_lst',
+        'poi_lst'
+    )
+
 class OrderDetailedSerializer(serializers.ModelSerializer):
     o_type = OrderTypeSerializer(many=False, read_only=True)
     o_status = OrderStatusSerializer(many=False, read_only=True)
+    items = OrderItemSerializer(many=True, read_only=True)
     created_by = AccountSerializer(many=False, read_only=True)
-
+    
     class Meta:        
         model = Order        
         fields = (
             'id',
             'o_type',
             'o_status',
-            'period',
-            'offer',
             'amount',
+            'discount_amount',
             'description',
+            'items',
             'created_by',
             'created_at'
         )
@@ -173,4 +169,43 @@ class AccountFilterSerializer(serializers.ModelSerializer):
             'age',
             'income',
             'count'
+        )
+
+
+class AgeSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Age        
+        fields = (
+            'code',
+            'name'
+        )   
+
+
+class GenderSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Gender        
+        fields = (
+            'code',
+            'name'
+        )   
+
+
+class IncomeSerializer(serializers.ModelSerializer):
+    class Meta:        
+        model = Income        
+        fields = (
+            'code',
+            'name'
+        )   
+
+
+class SourcePropSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SourceProp
+        fields = (
+            'id',
+            'table_ref',
+            'name_ref',
+            'count_dt',
+            'period'
         )

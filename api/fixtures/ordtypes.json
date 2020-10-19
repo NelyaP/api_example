@@ -3,7 +3,7 @@
         "model": "api.ordertype", 
         "pk": null,
         "fields": {
-            "code": "msk_mo_hj_zid_ts",
+            "code": "population",
             "name": "Численность населения"
         }
     },
@@ -11,7 +11,7 @@
         "model": "api.ordertype", 
         "pk": null,
         "fields": {
-            "code": "dynamics_mskmo",
+            "code": "dynamics",
             "name": "Динамика численности населения"
         }
     }
