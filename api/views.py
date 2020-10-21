@@ -5,19 +5,22 @@ from rest_framework.response import Response
 
 from django.contrib.auth.models import Group, Permission
 from .models import Account, Order, OrderType, OrderStatus, \
-    Age, Gender, Income, City, AccountFilter, SourceProp, OrderItem
+    Age, Gender, Income, City, AccountFilter, SourceProp, OrderItem, \
+    Calculator
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
     GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
     OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
     GenderSerializer, IncomeSerializer, CitySerializer, \
-    AccountFilterSerializer, SourcePropSerializer, OrderItemSerializer
+    AccountFilterSerializer, SourcePropSerializer, OrderItemSerializer, \
+    CalculatorSerializer
 
 from utils.pwd_generators import generate_20char_pwd
 from django.contrib.auth import get_user_model
 from utils.send_email import sp_send_simple_email
 
 import random
+import math
 
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -194,3 +197,97 @@ def register(request):
     sp_send_simple_email(subject, html, text, alias_name, email)
 
     return Response({"message": "User registared successfully"},status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])    
+@authentication_classes([])
+@permission_classes([])
+def calculate(request):
+    if not request.method == 'POST':
+        return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not 'variant' in request.data \
+        or not request.data['variant'] \
+        or not 'month_code' in request.data \
+        or not request.data['month_code'] \
+        or not 'cities' in request.data \
+        or not request.data['cities'] \
+        or not 'o_type' in request.data \
+        or not request.data['o_type'] \
+        or not 'segments' in request.data \
+        or not request.data['segments'] \
+        or not 'poi' in request.data \
+        or not request.data['poi']:
+
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if len(request.data['cities']) == 0:
+        return Response({"message": "Must be at least 1 picked city"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    cities = request.data['cities']
+    cities_n = len(request.data['cities'])
+    amount = 0
+    amount_13 = 0
+    for city in cities:
+        o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+        if not o_type_obj:
+            return Response({"message": "Type undefigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+        city_obj = City.objects.get(pk=city)
+        if not city_obj:
+            return Response({"message": "City undefigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+        category = getattr(city_obj, 'category', None)
+        if not category:
+            return Response({"message": "Category undefigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if cities_n > 12:
+            calc = Calculator.objects.filter(
+                o_type=o_type_obj,
+                category=13,
+                month_code=request.data['month_code']
+            )
+            amount_13 += calc[0].price
+
+        calc = Calculator.objects.filter(
+            o_type=o_type_obj,
+            category=category,
+            month_code=request.data['month_code']
+        )
+
+        amount += calc[0].price
+
+    ## Discount ##
+    discount = 0
+    if cities_n > 5 and cities_n <= 20:
+        if request.data['o_type'] == 'population':
+            # (!) 30000 is not correct
+            discount += (cities_n - 5)*30000*30/100
+        else:
+            if request.data['o_type'] == 'dynamics':
+                # (!) 60000 is not correct
+                discount += (cities_n - 5)*60000*30/100
+    else:
+        if cities_n > 20 and cities_n <= 50:
+            if request.data['o_type'] == 'population':
+                discount += (city_n - 20)*30000*50/100
+            else:
+                if request.data['o_type'] == 'dynamics':
+                    discount += (city_n - 20)*60000*50/100
+        else:
+            if cities_n > 50:
+                if request.data['o_type'] == 'population':
+                    discount += (city_n - 50)*30000*70/100
+                else:
+                    if request.data['o_type'] == 'dynamics':
+                        discount += (city_n - 50)*60000*70/100
+
+    segment_idx = 1.2**len(request.data['segments'])
+    poi_amt = len(request.data['poi'])*2000
+
+    price = {
+        'amount': round((float(amount) + float(amount_13))*segment_idx + poi_amt, 2),
+        'discount': round(discount, 2)
+    }
+
+    return Response(price, status=status.HTTP_200_OK)

@@ -1,0 +1,502 @@
+[
+    {
+        "model": "api.calculator", 
+        "pk": 1,
+        "fields": {
+            "o_type": "population",
+            "category": 99,
+            "month_code": 1,
+            "price": 60000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 2,
+        "fields": {
+            "o_type": "population",
+            "category": 99,
+            "month_code": 3,
+            "price": 144000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 3,
+        "fields": {
+            "o_type": "population",
+            "category": 99,
+            "month_code": 6,
+            "price": 252000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 4,
+        "fields": {
+            "o_type": "population",
+            "category": 99,
+            "month_code": 12,
+            "price": 360000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 5,
+        "fields": {
+            "o_type": "population",
+            "category": 99,
+            "month_code": 13,
+            "price": 30000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 6,
+        "fields": {
+            "o_type": "population",
+            "category": 98,
+            "month_code": 1,
+            "price": 52500
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 7,
+        "fields": {
+            "o_type": "population",
+            "category": 98,
+            "month_code": 3,
+            "price": 126000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 8,
+        "fields": {
+            "o_type": "population",
+            "category": 98,
+            "month_code": 6,
+            "price": 220500
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 9,
+        "fields": {
+            "o_type": "population",
+            "category": 98,
+            "month_code": 12,
+            "price": 315000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 10,
+        "fields": {
+            "o_type": "population",
+            "category": 98,
+            "month_code": 13,
+            "price": 26250
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 11,
+        "fields": {
+            "o_type": "population",
+            "category": 1,
+            "month_code": 1,
+            "price": 45000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 12,
+        "fields": {
+            "o_type": "population",
+            "category": 1,
+            "month_code": 3,
+            "price": 108000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 13,
+        "fields": {
+            "o_type": "population",
+            "category": 1,
+            "month_code": 6,
+            "price": 189000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 14,
+        "fields": {
+            "o_type": "population",
+            "category": 1,
+            "month_code": 12,
+            "price": 270000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 15,
+        "fields": {
+            "o_type": "population",
+            "category": 1,
+            "month_code": 13,
+            "price": 22500
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 16,
+        "fields": {
+            "o_type": "population",
+            "category": 2,
+            "month_code": 1,
+            "price": 36000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 17,
+        "fields": {
+            "o_type": "population",
+            "category": 2,
+            "month_code": 3,
+            "price": 86000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 18,
+        "fields": {
+            "o_type": "population",
+            "category": 2,
+            "month_code": 6,
+            "price": 151000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 19,
+        "fields": {
+            "o_type": "population",
+            "category": 2,
+            "month_code": 12,
+            "price": 216000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 20,
+        "fields": {
+            "o_type": "population",
+            "category": 2,
+            "month_code": 13,
+            "price": 18000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 21,
+        "fields": {
+            "o_type": "population",
+            "category": 3,
+            "month_code": 1,
+            "price": 30000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 22,
+        "fields": {
+            "o_type": "population",
+            "category": 3,
+            "month_code": 3,
+            "price": 72000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 23,
+        "fields": {
+            "o_type": "population",
+            "category": 3,
+            "month_code": 6,
+            "price": 126000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 24,
+        "fields": {
+            "o_type": "population",
+            "category": 3,
+            "month_code": 12,
+            "price": 180000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 25,
+        "fields": {
+            "o_type": "population",
+            "category": 3,
+            "month_code": 13,
+            "price": 15000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 26,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 99,
+            "month_code": 1,
+            "price": 120000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 27,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 99,
+            "month_code": 3,
+            "price": 288000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 28,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 99,
+            "month_code": 6,
+            "price": 504000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 29,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 99,
+            "month_code": 12,
+            "price": 720000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 30,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 99,
+            "month_code": 13,
+            "price": 60000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 31,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 98,
+            "month_code": 1,
+            "price": 105000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 32,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 98,
+            "month_code": 3,
+            "price": 252000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 33,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 98,
+            "month_code": 6,
+            "price": 441000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 34,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 98,
+            "month_code": 12,
+            "price": 630000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 35,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 98,
+            "month_code": 13,
+            "price": 52500
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 36,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 1,
+            "month_code": 1,
+            "price": 90000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 37,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 1,
+            "month_code": 3,
+            "price": 216000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 38,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 1,
+            "month_code": 6,
+            "price": 378000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 39,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 1,
+            "month_code": 12,
+            "price": 540000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 40,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 1,
+            "month_code": 13,
+            "price": 45000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 41,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 2,
+            "month_code": 1,
+            "price": 72000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 42,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 2,
+            "month_code": 3,
+            "price": 172800
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 43,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 2,
+            "month_code": 6,
+            "price": 302400
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 44,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 2,
+            "month_code": 12,
+            "price": 432000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 45,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 2,
+            "month_code": 13,
+            "price": 36000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 46,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 3,
+            "month_code": 1,
+            "price": 60000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 47,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 3,
+            "month_code": 3,
+            "price": 144000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 48,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 3,
+            "month_code": 6,
+            "price": 252000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 49,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 3,
+            "month_code": 12,
+            "price": 360000
+        }
+    },
+    {
+        "model": "api.calculator", 
+        "pk": 50,
+        "fields": {
+            "o_type": "dynamics",
+            "category": 3,
+            "month_code": 13,
+            "price": 30000
+        }
+    }
+]

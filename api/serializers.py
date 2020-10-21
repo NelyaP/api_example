@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Account, Order, OrderItem, \
     OrderType, OrderStatus, Age, Gender, Income, \
-    City, AccountFilter, SourceProp
+    City, AccountFilter, SourceProp, Calculator
 
 from django.contrib.auth.models import Group, Permission
 #from django.contrib.auth.hashers import make_password
@@ -208,4 +208,16 @@ class SourcePropSerializer(serializers.ModelSerializer):
             'name_ref',
             'count_dt',
             'period'
+        )
+
+
+class CalculatorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Calculator
+        fields = (
+            'id',
+            'o_type',
+            'category',
+            'month_code',
+            'price'
         )

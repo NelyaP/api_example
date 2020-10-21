@@ -198,3 +198,12 @@ class SourceProp(models.Model):
 
     def __str__(self):
         return '{} / {}'.format(self.table_ref, self.name_ref)
+
+class Calculator(models.Model):
+    o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)
+    category = models.SmallIntegerField('Category') 
+    month_code = models.IntegerField('Month code') 
+    price = models.DecimalField('Price', max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return 'Rule #{}'.format(str(self.id))
