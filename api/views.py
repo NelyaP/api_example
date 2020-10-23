@@ -26,6 +26,7 @@ class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
 
+
 class AccountView(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
@@ -52,29 +53,36 @@ class AccountView(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data)
 
+
 class AccountFilterView(viewsets.ModelViewSet):
     queryset = AccountFilter.objects.all()
     serializer_class = AccountFilterSerializer
+
 
 class AgeView(viewsets.ModelViewSet):
     queryset = Age.objects.all()
     serializer_class = AgeSerializer
 
+
 class GenderView(viewsets.ModelViewSet):
     queryset = Gender.objects.all()
     serializer_class = GenderSerializer
+
 
 class IncomeView(viewsets.ModelViewSet):
     queryset = Income.objects.all()
     serializer_class = IncomeSerializer
 
+
 class OrderTypeView(viewsets.ModelViewSet):
     queryset = OrderType.objects.all()
     serializer_class = OrderTypeSerializer
 
+
 class OrderStatusView(viewsets.ModelViewSet):
     queryset = OrderStatus.objects.all()
     serializer_class = OrderStatusSerializer
+
 
 class OrderView(viewsets.ModelViewSet):
     queryset = Order.objects.all()
@@ -102,9 +110,11 @@ class OrderView(viewsets.ModelViewSet):
         self.perform_update(serializer)
         return Response(serializer.data)
 
+
 class OrderItemView(viewsets.ModelViewSet):
     queryset = OrderItem.objects.all()
     serializer_class = OrderItemSerializer
+
 
 class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
     queryset = Order.objects.all()
@@ -114,17 +124,37 @@ class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
         queryset = Order.objects.filter(created_by=self.request.user)
         return queryset
 
+
 class SourcePropView(viewsets.ModelViewSet):
     queryset = SourceProp.objects.all()
     serializer_class = SourcePropSerializer
+
 
 class GroupView(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
+
 class PermissionView(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
+
+# User Filters #
+class CityUserView(viewsets.ReadOnlyModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+    def get_queryset(self):
+        queryset = []
+        orders = Order.objects.filter(created_by=self.request.user)
+        for order in orders:
+            items = OrderItem.objects.filter(order=order)
+            for item in items:
+                queryset.append(item.city)
+
+        #queryset = City.objects.filter(username=self.request.user)
+        return queryset
+
 
 @api_view(['POST'])    
 @authentication_classes([])
@@ -203,6 +233,7 @@ def register(request):
 @authentication_classes([])
 @permission_classes([])
 def calculate(request):
+    print('request.data', request.data)
     if not request.method == 'POST':
         return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -215,24 +246,33 @@ def calculate(request):
         or not 'o_type' in request.data \
         or not request.data['o_type'] \
         or not 'segments' in request.data \
-        or not request.data['segments'] \
-        or not 'poi' in request.data \
-        or not request.data['poi']:
+        or not 'poi' in request.data:
 
         return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
 
+    if request.data['month_code'] < 13 and request.data['month_code'] not in [1, 3, 6, 12]:
+        return Response({"message": "Month code less than 13 must have value 1, 3, 6 or 12"}, status=status.HTTP_400_BAD_REQUEST)
+        
     if len(request.data['cities']) == 0:
         return Response({"message": "Must be at least 1 picked city"}, status=status.HTTP_400_BAD_REQUEST)
     
+    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    if not o_type_obj:
+        return Response({"message": "Type undefigned"}, status=status.HTTP_400_BAD_REQUEST)
+
     cities = request.data['cities']
     cities_n = len(request.data['cities'])
     amount = 0
     amount_13 = 0
-    for city in cities:
-        o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
-        if not o_type_obj:
-            return Response({"message": "Type undefigned"}, status=status.HTTP_400_BAD_REQUEST)
+    discount_lst = []
+    discount_priority = [(3, 1), (2, 2), (1, 3), (98, 4), (99, 5)]
+    # month
+    month_n = request.data['month_code']
+    month_main = month_n
+    if month_n > 12:
+        month_main = 12
 
+    for city in cities:
         city_obj = City.objects.get(pk=city)
         if not city_obj:
             return Response({"message": "City undefigned"}, status=status.HTTP_400_BAD_REQUEST)
@@ -241,53 +281,77 @@ def calculate(request):
         if not category:
             return Response({"message": "Category undefigned"}, status=status.HTTP_400_BAD_REQUEST)
 
-        if cities_n > 12:
-            calc = Calculator.objects.filter(
+        # add for discount
+        discount_lst.append({
+            'id': city_obj.id,
+            'priority': [item for item in discount_priority if item[0] == category][0][1]
+        })
+        
+        if month_n > 12:
+            calc_13 = Calculator.objects.filter(
                 o_type=o_type_obj,
-                category=13,
-                month_code=request.data['month_code']
+                category=category,
+                month_code=13
             )
-            amount_13 += calc[0].price
+            amount_13 += (month_n - 12) * calc_13[0].price
 
-        calc = Calculator.objects.filter(
+        calc_main = Calculator.objects.filter(
             o_type=o_type_obj,
             category=category,
-            month_code=request.data['month_code']
+            month_code=month_main
         )
-
-        amount += calc[0].price
+        amount += calc_main[0].price
 
     ## Discount ##
     discount = 0
+    discount_lst_sorted = sorted(
+        discount_lst,
+        key=lambda x: x['priority'], reverse=False
+    )
+    has_discount = []
     if cities_n > 5 and cities_n <= 20:
-        if request.data['o_type'] == 'population':
-            # (!) 30000 is not correct
-            discount += (cities_n - 5)*30000*30/100
-        else:
-            if request.data['o_type'] == 'dynamics':
-                # (!) 60000 is not correct
-                discount += (cities_n - 5)*60000*30/100
+        has_discount = discount_lst_sorted[0:(cities_n - 5)]
+        for i in has_discount:
+            category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
+            calc_discount = Calculator.objects.filter(
+                o_type=o_type_obj,
+                category=category_i,
+                month_code=month_main
+            )
+        discount += (cities_n - 5)*calc_discount[0].price*30/100 
     else:
         if cities_n > 20 and cities_n <= 50:
-            if request.data['o_type'] == 'population':
-                discount += (city_n - 20)*30000*50/100
-            else:
-                if request.data['o_type'] == 'dynamics':
-                    discount += (city_n - 20)*60000*50/100
+            has_discount = discount_lst_sorted[0:(cities_n - 20)]
+            for i in has_discount:
+                category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
+                calc_discount = Calculator.objects.filter(
+                    o_type=o_type_obj,
+                    category=category_i,
+                    month_code=month_main
+                )
+                discount += (cities_n - 20)*calc_discount[0].price*50/100 
         else:
             if cities_n > 50:
-                if request.data['o_type'] == 'population':
-                    discount += (city_n - 50)*30000*70/100
-                else:
-                    if request.data['o_type'] == 'dynamics':
-                        discount += (city_n - 50)*60000*70/100
+                has_discount = discount_lst_sorted[0:(cities_n - 50)]
+                for i in has_discount:
+                    category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
+                    calc_discount = Calculator.objects.filter(
+                        o_type=o_type_obj,
+                        category=category_i,
+                        month_code=month_main
+                    )
+                    discount += (cities_n - 50)*calc_discount[0].price*70/100 
 
-    segment_idx = 1.2**len(request.data['segments'])
+    segment_idx = 1
+    if request.data['segments'] != 0:
+        segment_idx = 1.2**len(request.data['segments'])
+
     poi_amt = len(request.data['poi'])*2000
 
     price = {
         'amount': round((float(amount) + float(amount_13))*segment_idx + poi_amt, 2),
-        'discount': round(discount, 2)
+        'discount': round(discount, 2),
+        'month': month_n
     }
 
     return Response(price, status=status.HTTP_200_OK)
