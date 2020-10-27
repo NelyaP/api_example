@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import Account, Order, OrderItem, \
     OrderType, OrderStatus, Age, Gender, Income, \
-    City, AccountFilter, SourceProp, Calculator
+    City, AccountFilter, Calculator
 
 from django.contrib.auth.models import Group, Permission
 #from django.contrib.auth.hashers import make_password
@@ -92,7 +92,9 @@ class OrderTypeSerializer(serializers.ModelSerializer):
         model = OrderType        
         fields = (
             'code',
-            'name'
+            'name',
+            'period',
+            'count_dt'
         )       
 
 
@@ -122,15 +124,16 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
-    model = OrderItem
-    fields = (
-        'id',
-        'city',
-        'time_slot_from',
-        'time_slot_to',
-        'filters_lst',
-        'poi_lst'
-    )
+    class Meta:
+        model = OrderItem
+        fields = (
+            'id',
+            'order',
+            'city',
+            'slots_lst',
+            'filters_lst',
+            'poi_lst'
+        )
 
 class OrderDetailedSerializer(serializers.ModelSerializer):
     o_type = OrderTypeSerializer(many=False, read_only=True)
@@ -198,17 +201,6 @@ class IncomeSerializer(serializers.ModelSerializer):
             'name'
         )   
 
-
-class SourcePropSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SourceProp
-        fields = (
-            'id',
-            'table_ref',
-            'name_ref',
-            'count_dt',
-            'period'
-        )
 
 
 class CalculatorSerializer(serializers.ModelSerializer):

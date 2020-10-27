@@ -117,8 +117,14 @@ class AccountFilter(models.Model):
 
 
 class OrderType(models.Model):
+    PERIOD_CHOICES = (
+        ('1mth', '1 месяц'),
+        ('30min', '30 минут')
+    )
     code = models.CharField(primary_key=True, max_length=100, unique=True)
     name = models.CharField(max_length=250)
+    period = models.CharField('Period', max_length=20, choices=PERIOD_CHOICES)
+    count_dt = models.DateTimeField('Count date and time')
 
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
@@ -152,13 +158,12 @@ class Order(models.Model):
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.PROTECT)
     city = models.ForeignKey(City, on_delete=models.PROTECT)
-    time_slot_from = models.IntegerField('Time slot (From)') 
-    time_slot_to = models.IntegerField('Time slot (To)') 
+    slots_lst = models.CharField('Chosen time slots', max_length=500)
     filters_lst = models.CharField('Chosen filters', max_length=500, blank=True, null=True)
     poi_lst = models.CharField('Chosen POI', max_length=500, blank=True, null=True)
 
     def __str__(self):
-        return 'Order item #{}'.format(str(self.id))
+        return 'Item #{}'.format(str(self.id))
 
 
 # Filters #
@@ -185,19 +190,6 @@ class Income(models.Model):
     def __str__(self):
         return '{} / {}'.format(self.code, self.name)
 
-
-class SourceProp(models.Model):
-    PERIOD_CHOICES = (
-        ('1mth', '1 месяц'),
-        ('30min', '30 минут')
-    )
-    table_ref = models.CharField('Table Ref', max_length=250)
-    name_ref = models.CharField('Name Ref', max_length=250)
-    count_dt = models.DateField('Count Date')
-    period = models.CharField('Period', max_length=20, choices=PERIOD_CHOICES)
-
-    def __str__(self):
-        return '{} / {}'.format(self.table_ref, self.name_ref)
 
 class Calculator(models.Model):
     o_type = models.ForeignKey(OrderType, on_delete=models.CASCADE)

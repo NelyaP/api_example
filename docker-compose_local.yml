@@ -2,7 +2,7 @@ version: '3.7'
 
 services:    
   postgis:
-    image: postgis/postgis:latest
+    image: postgis/postgis:12-master
     restart: unless-stopped
     container_name: postgis
     environment:

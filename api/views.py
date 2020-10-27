@@ -2,17 +2,18 @@ from django.shortcuts import render
 from rest_framework import viewsets, generics, status, permissions
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.contrib.auth.models import Group, Permission
 from .models import Account, Order, OrderType, OrderStatus, \
-    Age, Gender, Income, City, AccountFilter, SourceProp, OrderItem, \
+    Age, Gender, Income, City, AccountFilter, OrderItem, \
     Calculator
 from django.contrib.auth.models import Group, Permission
 from .serializers import AccountSerializer, OrderSerializer, \
     GroupSerializer, PermissionSerializer, OrderDetailedSerializer, \
     OrderTypeSerializer, OrderStatusSerializer, AgeSerializer, \
     GenderSerializer, IncomeSerializer, CitySerializer, \
-    AccountFilterSerializer, SourcePropSerializer, OrderItemSerializer, \
+    AccountFilterSerializer, OrderItemSerializer, \
     CalculatorSerializer
 
 from utils.pwd_generators import generate_20char_pwd
@@ -21,6 +22,8 @@ from utils.send_email import sp_send_simple_email
 
 import random
 import math
+from datetime import date, timedelta, datetime
+from dateutil.relativedelta import relativedelta
 
 class CityView(viewsets.ModelViewSet):
     queryset = City.objects.all()
@@ -57,21 +60,6 @@ class AccountView(viewsets.ModelViewSet):
 class AccountFilterView(viewsets.ModelViewSet):
     queryset = AccountFilter.objects.all()
     serializer_class = AccountFilterSerializer
-
-
-class AgeView(viewsets.ModelViewSet):
-    queryset = Age.objects.all()
-    serializer_class = AgeSerializer
-
-
-class GenderView(viewsets.ModelViewSet):
-    queryset = Gender.objects.all()
-    serializer_class = GenderSerializer
-
-
-class IncomeView(viewsets.ModelViewSet):
-    queryset = Income.objects.all()
-    serializer_class = IncomeSerializer
 
 
 class OrderTypeView(viewsets.ModelViewSet):
@@ -125,11 +113,6 @@ class OrderDetailedView(viewsets.ReadOnlyModelViewSet):
         return queryset
 
 
-class SourcePropView(viewsets.ModelViewSet):
-    queryset = SourceProp.objects.all()
-    serializer_class = SourcePropSerializer
-
-
 class GroupView(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -139,22 +122,209 @@ class PermissionView(viewsets.ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = PermissionSerializer
 
+
+class AgeView(viewsets.ModelViewSet):
+    queryset = Age.objects.all()
+    serializer_class = AgeSerializer
+
+
+class GenderView(viewsets.ModelViewSet):
+    queryset = Gender.objects.all()
+    serializer_class = GenderSerializer
+
+
+class IncomeView(viewsets.ModelViewSet):
+    queryset = Income.objects.all()
+    serializer_class = IncomeSerializer
+
 # User Filters #
+class OrderTypeUserView(viewsets.ReadOnlyModelViewSet):
+    queryset = OrderType.objects.all()
+    serializer_class = OrderTypeSerializer
+
+    def get_queryset(self):
+        types_lst = ['population']
+        done_status_obj = OrderStatus.objects.get(pk='done')
+        orders = Order.objects.filter(created_by=self.request.user, o_status=done_status_obj)
+        for order in orders:
+            if order.o_type.code not in types_lst:
+                types_lst.append(order.o_type.code)
+
+        queryset = OrderType.objects.filter(pk__in=types_lst)
+        return queryset
+
 class CityUserView(viewsets.ReadOnlyModelViewSet):
     queryset = City.objects.all()
     serializer_class = CitySerializer
 
     def get_queryset(self):
-        queryset = []
-        orders = Order.objects.filter(created_by=self.request.user)
-        for order in orders:
-            items = OrderItem.objects.filter(order=order)
-            for item in items:
-                queryset.append(item.city)
+        # Moscow and Voronezh by default
+        cities_lst = [1, 3]
+        if 'o_type' in self.request.data and self.request.data['o_type']:
+            o_type_obj = OrderType.objects.get(pk=self.request.data['o_type'])
+            if o_type_obj:
+                done_status_obj = OrderStatus.objects.get(pk='done')
+                orders = Order.objects.filter(created_by=self.request.user, o_status=done_status_obj, o_type=o_type_obj)
+                for order in orders:
+                    items = OrderItem.objects.filter(order=order)
+                    for item in items:
+                        if item.city.id not in cities_lst:
+                            cities_lst.append(item.city.id)
 
-        #queryset = City.objects.filter(username=self.request.user)
+        queryset = City.objects.filter(pk__in=cities_lst)
         return queryset
 
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_slots(request):
+    if not request.method == 'GET':
+        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not 'o_type' in request.data \
+        or not request.data['o_type'] \
+        or not 'city' in request.data \
+        or not request.data['city']:
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    if not o_type_obj:
+        return Response({"message": "Type is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+    city_obj = City.objects.get(pk=request.data['city'])
+    if not city_obj:
+        return Response({"message": "City is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    slots_lst = []
+    start_date = date(2018, 1, 1)
+    start_datetime = datetime(2018, 1, 1, 0, 0)
+    # default 
+    if o_type_obj.code == 'population':
+        default = 32
+        slot_date = start_date + relativedelta(months=+(default-1))
+        slots_lst.append({
+            'slot': default,
+            'title': '{}-{}'.format(slot_date.month, slot_date.year)
+        })
+    
+    done_status_obj = OrderStatus.objects.get(pk='done')
+    orders = Order.objects.filter(
+        created_by=request.user, 
+        o_status=done_status_obj, 
+        o_type=o_type_obj
+    )
+    for order in orders:
+        items = OrderItem.objects.filter(
+            order=order, 
+            city=city_obj
+        )
+        for item in items:
+            slots_txt = item.slots_lst
+            for i in slots_txt.split(','):
+                if i not in slots_lst:
+                    if o_type_obj.code == 'population':
+                        # ('1mth', '1 месяц')
+                        slot_date = start_date + relativedelta(months=+(int(i)-1))
+                        slots_lst.append({
+                            'slot': int(i),
+                            'title': '{}-{}'.format(slot_date.month, slot_date.year)
+                        })
+                    else: 
+                        if o_type_obj.code == 'dynamics':
+                            # ('30min', '30 минут')
+                            slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
+                            slots_lst.append({
+                                'slot': int(i),
+                                'title': slot_date
+                            })
+
+    return Response(slots_lst, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_poi(request):
+    if not request.method == 'GET':
+        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not 'o_type' in request.data \
+        or not request.data['o_type'] \
+        or not 'city' in request.data \
+        or not request.data['city']:
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    if not o_type_obj:
+        return Response({"message": "Type is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+    city_obj = City.objects.get(pk=request.data['city'])
+    if not city_obj:
+        return Response({"message": "City is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get avaliable poi
+    poi_lst = []
+    done_status_obj = OrderStatus.objects.get(pk='done')
+    orders = Order.objects.filter(
+        created_by=request.user, 
+        o_status=done_status_obj, 
+        o_type=o_type_obj
+    )
+    for order in orders:
+        items = OrderItem.objects.filter(
+            order=order, 
+            city=city_obj
+        )
+        for item in items:
+            poi_txt = item.poi_lst
+            for i in poi_txt.split(','):
+                if i not in poi_lst:
+                    poi_lst.append(i)
+                    
+    return Response(poi_lst, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_segment(request):
+    if not request.method == 'GET':
+        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not 'o_type' in request.data \
+        or not request.data['o_type'] \
+        or not 'city' in request.data \
+        or not request.data['city']:
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    if not o_type_obj:
+        return Response({"message": "Type is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+    city_obj = City.objects.get(pk=request.data['city'])
+    if not city_obj:
+        return Response({"message": "City is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Get avaliable segments
+    filters_lst = []
+    done_status_obj = OrderStatus.objects.get(pk='done')
+    orders = Order.objects.filter(
+        created_by=request.user, 
+        o_status=done_status_obj, 
+        o_type=o_type_obj
+    )
+    for order in orders:
+        items = OrderItem.objects.filter(
+            order=order, 
+            city=city_obj
+        )
+        for item in items:
+            filters_txt = item.filters_lst
+            for i in filters_txt.split(','):
+                if i not in filters_lst:
+                    filters_lst.append(i)
+
+    return Response(filters_lst, status=status.HTTP_200_OK)
+    
 
 @api_view(['POST'])    
 @authentication_classes([])
@@ -233,7 +403,6 @@ def register(request):
 @authentication_classes([])
 @permission_classes([])
 def calculate(request):
-    print('request.data', request.data)
     if not request.method == 'POST':
         return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
 

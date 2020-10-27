@@ -4,7 +4,7 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-from api.views import register, calculate
+from api.views import register, calculate, get_user_slots, get_user_poi, get_user_segment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -13,5 +13,8 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view()),
     path('api/token/refresh/', TokenRefreshView.as_view()),
     path('api/register/', register),
-    path('api/calculate/', calculate)
+    path('api/calculate/', calculate),
+    path('api/user-slot/', get_user_slots),
+    path('api/user-poi/', get_user_poi),
+    path('api/user-segment/', get_user_segment)
 ]
