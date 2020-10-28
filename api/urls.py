@@ -3,7 +3,7 @@ from rest_framework import routers
 from .views import AccountView, OrderView, GroupView, PermissionView, \
     OrderDetailedView, OrderTypeView, OrderStatusView, AgeView, GenderView, \
     IncomeView, CityView, AccountFilterView, OrderItemView, \
-    CityUserView, OrderTypeUserView
+    OrderTypeUserView
 
 
 router = routers.DefaultRouter()
@@ -22,7 +22,6 @@ router.register(r'city', CityView)
 router.register(r'filter', AccountFilterView)
 router.register(r'item', OrderItemView)
 # user views #
-router.register(r'user-city', CityUserView)
 router.register(r'user-order-type', OrderTypeUserView)
 
 urlpatterns = [

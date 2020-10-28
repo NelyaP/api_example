@@ -153,34 +153,52 @@ class OrderTypeUserView(viewsets.ReadOnlyModelViewSet):
         queryset = OrderType.objects.filter(pk__in=types_lst)
         return queryset
 
-class CityUserView(viewsets.ReadOnlyModelViewSet):
-    queryset = City.objects.all()
-    serializer_class = CitySerializer
 
-    def get_queryset(self):
-        # Moscow and Voronezh by default
-        cities_lst = [1, 3]
-        if 'o_type' in self.request.data and self.request.data['o_type']:
-            o_type_obj = OrderType.objects.get(pk=self.request.data['o_type'])
-            if o_type_obj:
-                done_status_obj = OrderStatus.objects.get(pk='done')
-                orders = Order.objects.filter(created_by=self.request.user, o_status=done_status_obj, o_type=o_type_obj)
-                for order in orders:
-                    items = OrderItem.objects.filter(order=order)
-                    for item in items:
-                        if item.city.id not in cities_lst:
-                            cities_lst.append(item.city.id)
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_user_cities(request):
+    if not 'o_type' in request.data \
+        or not request.data['o_type']:
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+    
+    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    if not o_type_obj:
+        return Response({"message": "Type is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
 
-        queryset = City.objects.filter(pk__in=cities_lst)
-        return queryset
+    # Moscow and Voronezh by default
+    cities_lst = [1, 3]
+    done_status_obj = OrderStatus.objects.get(pk='done')
+    orders = Order.objects.filter(created_by=request.user, o_status=done_status_obj, o_type=o_type_obj)
+    for order in orders:
+        items = OrderItem.objects.filter(order=order)
+        for item in items:
+            if item.city.id not in cities_lst:
+                cities_lst.append(item.city.id)
 
-@api_view(['GET'])
+    lst = []
+    cities_objs = City.objects.filter(pk__in=cities_lst)
+    for obj in cities_objs:
+        lst.append({
+            'id' : obj.id,
+            'id_ref' : obj.id_ref,
+            'name_ref' : obj.name_ref,
+            'table_ref' : obj.table_ref,
+            'grid' : obj.grid,
+            'centroid_lat' : obj.centroid_lat,
+            'centroid_lon' : obj.centroid_lon,
+            'category' : obj.category,
+            'is_active' : obj.is_active,
+            'is_demo' : obj.is_demo
+        })
+
+    return Response(lst, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_user_slots(request):
-    if not request.method == 'GET':
-        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
-
     if not 'o_type' in request.data \
         or not request.data['o_type'] \
         or not 'city' in request.data \
@@ -240,13 +258,10 @@ def get_user_slots(request):
 
     return Response(slots_lst, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_user_poi(request):
-    if not request.method == 'GET':
-        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
-
     if not 'o_type' in request.data \
         or not request.data['o_type'] \
         or not 'city' in request.data \
@@ -276,20 +291,18 @@ def get_user_poi(request):
         )
         for item in items:
             poi_txt = item.poi_lst
-            for i in poi_txt.split(','):
-                if i not in poi_lst:
-                    poi_lst.append(i)
+            if poi_txt:
+                for i in poi_txt.split(','):
+                    if i not in poi_lst:
+                        poi_lst.append(i)
                     
     return Response(poi_lst, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def get_user_segment(request):
-    if not request.method == 'GET':
-        return Response({"message": "Only GET method is available"}, status=status.HTTP_400_BAD_REQUEST)
-
     if not 'o_type' in request.data \
         or not request.data['o_type'] \
         or not 'city' in request.data \
