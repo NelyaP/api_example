@@ -295,8 +295,28 @@ def get_user_poi(request):
                 for i in poi_txt.split(','):
                     if i not in poi_lst:
                         poi_lst.append(i)
+     #{ 'code': 'MiscCategories', 'name': 'Кладбища', 'disabled': True }
+    f_poi_lst = [
+        { 'code': 'AutoSvc', 'name': 'Автосервисы, АЗС, автомойки', 'disabled': True },
+        { 'code': 'Business', 'name': 'Предприятия, бизнес-центры', 'disabled': True },
+        { 'code': 'CommSvc', 'name': 'Государственные учреждения', 'disabled': True },
+        { 'code': 'EduInsts', 'name': 'Образовательные учреждения', 'disabled': True },
+        { 'code': 'Entertn', 'name': 'Театры, клубы, кинотеатры', 'disabled': True },
+        { 'code': 'FinInsts', 'name': 'Банки', 'disabled': True },
+        { 'code': 'Hospital', 'name': 'Медицинские учреждения', 'disabled': True },
+        { 'code': 'Metro', 'name': 'Станции метро', 'disabled': True },
+        { 'code': 'ParkRec', 'name': 'Парки, стадионы, фитнесс-центры', 'disabled': True },
+        { 'code': 'Restrnts', 'name': 'Рестораны', 'disabled': True },
+        { 'code': 'Shopping', 'name': 'Магазины', 'disabled': True },
+        { 'code': 'TransHubs', 'name': 'Вокзалы, автовокзалыб метро и жд', 'disabled': True },
+        { 'code': 'TravDest', 'name': 'Туристические места', 'disabled': True },
+        { 'code': 'Airports', 'name': 'Аэропорты', 'disabled': True }
+    ]
+    for poi in f_poi_lst:
+        if poi['code'] in poi_lst:
+            poi['disabled'] = False
                     
-    return Response(poi_lst, status=status.HTTP_200_OK)
+    return Response(f_poi_lst, status=status.HTTP_200_OK)
 
 
 @api_view(['POST'])
@@ -343,9 +363,6 @@ def get_user_segment(request):
 @authentication_classes([])
 @permission_classes([])
 def register(request):
-    if not request.method == 'POST':
-        return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
-    
     if not 'phone' in request.data \
         or not request.data['phone'] \
         or not 'email' in request.data \
@@ -416,9 +433,6 @@ def register(request):
 @authentication_classes([])
 @permission_classes([])
 def calculate(request):
-    if not request.method == 'POST':
-        return Response({"message": "Only POST method is available"}, status=status.HTTP_400_BAD_REQUEST)
-
     if not 'variant' in request.data \
         or not request.data['variant'] \
         or not 'month_code' in request.data \
