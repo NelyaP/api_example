@@ -507,6 +507,7 @@ def calculate(request):
     has_discount = []
     if cities_n > 5 and cities_n <= 20:
         has_discount = discount_lst_sorted[0:(cities_n - 5)]
+        print('30% Off ', has_discount)
         for i in has_discount:
             category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
             calc_discount = Calculator.objects.filter(
@@ -514,10 +515,11 @@ def calculate(request):
                 category=category_i,
                 month_code=month_main
             )
-        discount += (cities_n - 5)*calc_discount[0].price*30/100 
+            discount += calc_discount[0].price*30/100 
     else:
         if cities_n > 20 and cities_n <= 50:
             has_discount = discount_lst_sorted[0:(cities_n - 20)]
+            print('50% Off ', has_discount)
             for i in has_discount:
                 category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
                 calc_discount = Calculator.objects.filter(
@@ -525,10 +527,11 @@ def calculate(request):
                     category=category_i,
                     month_code=month_main
                 )
-                discount += (cities_n - 20)*calc_discount[0].price*50/100 
+                discount += calc_discount[0].price*50/100 
         else:
             if cities_n > 50:
                 has_discount = discount_lst_sorted[0:(cities_n - 50)]
+                print('70% Off ', has_discount)
                 for i in has_discount:
                     category_i = [item for item in discount_priority if item[1] == i['priority']][0][0]
                     calc_discount = Calculator.objects.filter(
@@ -536,7 +539,7 @@ def calculate(request):
                         category=category_i,
                         month_code=month_main
                     )
-                    discount += (cities_n - 50)*calc_discount[0].price*70/100 
+                    discount += calc_discount[0].price*70/100 
 
     segment_idx = 1
     if request.data['segments'] != 0:
