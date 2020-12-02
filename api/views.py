@@ -308,7 +308,7 @@ def get_user_poi(request):
         { 'code': 'ParkRec', 'name': 'Парки, стадионы, фитнесс-центры', 'disabled': True },
         { 'code': 'Restrnts', 'name': 'Рестораны', 'disabled': True },
         { 'code': 'Shopping', 'name': 'Магазины', 'disabled': True },
-        { 'code': 'TransHubs', 'name': 'Вокзалы, автовокзалыб метро и жд', 'disabled': True },
+        { 'code': 'TransHubs', 'name': 'Вокзалы, автовокзалы, метро и жд', 'disabled': True },
         { 'code': 'TravDest', 'name': 'Туристические места', 'disabled': True },
         { 'code': 'Airports', 'name': 'Аэропорты', 'disabled': True }
     ]
