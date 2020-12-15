@@ -172,7 +172,7 @@ def get_user_cities(request):
         cities_lst = [1, 3]
     else:
         if o_type == 'dynamics':
-            cities_lst = [1, 3]
+            cities_lst = [1]
         else:
             cities_lst = []
         
