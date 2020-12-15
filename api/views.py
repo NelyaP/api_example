@@ -264,9 +264,10 @@ def get_user_slots(request):
                             # !not slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
                             # ('1d', '1 день')
                             slot_date = start_date + relativedelta(days=+(int(i)-1))
+                            slot_date_dt = datetime.combine(slot_date, datetime.min.time())
                             slots_lst.append({
                                 'slot': i,
-                                'title': '{}-{}-{}'.format(slot_date.day, slot_date.month, slot_date.year)
+                                'title': slot_date_dt.strftime('%d-%m-%Y')
                             })
 
     return Response(slots_lst, status=status.HTTP_200_OK)
