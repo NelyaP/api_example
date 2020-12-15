@@ -247,9 +247,8 @@ def get_user_slots(request):
         for item in items:
             slots_txt = item.slots_lst
             slot_txt_to_lst = list(map(int, slots_txt.split(',')))
-            slot_txt_to_lst_sorted = slot_txt_to_lst.sort()
-            print('slot_txt_to_lst_sorted', slot_txt_to_lst_sorted)
-            for i in slot_txt_to_lst_sorted:
+            slot_txt_to_lst.sort()
+            for i in slot_txt_to_lst:
                 if i not in slots_lst:
                     print('not in')
                     if o_type_obj.code == 'population':
