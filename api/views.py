@@ -162,12 +162,20 @@ def get_user_cities(request):
         or not request.data['o_type']:
         return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
     
-    o_type_obj = OrderType.objects.get(pk=request.data['o_type'])
+    o_type = request.data['o_type']
+    o_type_obj = OrderType.objects.get(pk=o_type)
     if not o_type_obj:
         return Response({"message": "Type is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
 
     # Moscow and Voronezh by default
-    cities_lst = [1, 3]
+    if o_type == 'population':
+        cities_lst = [1, 3]
+    else:
+        if o_type == 'dynamics':
+            cities_lst = [1, 3]
+        else:
+            cities_lst = []
+        
     done_status_obj = OrderStatus.objects.get(pk='done')
     orders = Order.objects.filter(created_by=request.user, o_status=done_status_obj, o_type=o_type_obj)
     for order in orders:
