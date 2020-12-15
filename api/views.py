@@ -246,22 +246,27 @@ def get_user_slots(request):
         )
         for item in items:
             slots_txt = item.slots_lst
-            for i in slots_txt.split(','):
+            slot_txt_to_lst = list(map(int, slots_txt.split(',')))
+            slot_txt_to_lst_sorted = slot_txt_to_lst.sort()
+            for i in slot_txt_to_lst_sorted:
                 if i not in slots_lst:
+                    print('not in')
                     if o_type_obj.code == 'population':
                         # ('1mth', '1 месяц')
                         slot_date = start_date + relativedelta(months=+(int(i)-1))
                         slots_lst.append({
-                            'slot': int(i),
+                            'slot': i,
                             'title': '{}-{}'.format(slot_date.month, slot_date.year)
                         })
                     else: 
                         if o_type_obj.code == 'dynamics':
-                            # ('30min', '30 минут')
-                            slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
+                            # !not ('30min', '30 минут')
+                            # !not slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
+                            # ('1d', '1 день')
+                            slot_date = start_date + relativedelta(days=+(int(i)-1))
                             slots_lst.append({
-                                'slot': int(i),
-                                'title': slot_date
+                                'slot': i,
+                                'title': '{}-{}-{}'.format(slot_date.day, slot_date.month, slot_date.year)
                             })
 
     return Response(slots_lst, status=status.HTTP_200_OK)

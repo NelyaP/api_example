@@ -119,6 +119,7 @@ class AccountFilter(models.Model):
 class OrderType(models.Model):
     PERIOD_CHOICES = (
         ('1mth', '1 месяц'),
+        ('1d', '1 день'),
         ('30min', '30 минут')
     )
     code = models.CharField(primary_key=True, max_length=100, unique=True)
