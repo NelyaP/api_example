@@ -221,6 +221,7 @@ def get_user_slots(request):
     if not city_obj:
         return Response({"message": "City is not defigned"}, status=status.HTTP_400_BAD_REQUEST)
     
+    slots_check = []
     slots_lst = []
     start_date = date(2018, 1, 1)
     start_datetime = datetime(2018, 1, 1, 0, 0)
@@ -232,6 +233,7 @@ def get_user_slots(request):
             'slot': default,
             'title': '{}-{}'.format(slot_date.month, slot_date.year)
         })
+        slots_check.append(default)
     
     done_status_obj = OrderStatus.objects.get(pk='done')
     orders = Order.objects.filter(
@@ -249,22 +251,24 @@ def get_user_slots(request):
             slot_txt_to_lst = list(map(int, slots_txt.split(',')))
             slot_txt_to_lst.sort()
             for i in slot_txt_to_lst:
-                if i not in slots_lst:
-                    print('not in')
-                    if o_type_obj.code == 'population':
-                        # ('1mth', '1 месяц')
-                        slot_date = start_date + relativedelta(months=+(int(i)-1))
+                if o_type_obj.code == 'population':
+                    # ('1mth', '1 месяц')
+                    slot_date = start_date + relativedelta(months=+(int(i)-1))
+                    # if not already in there - APPEND
+                    if i not in slots_check:
                         slots_lst.append({
                             'slot': i,
                             'title': '{}-{}'.format(slot_date.month, slot_date.year)
                         })
-                    else: 
-                        if o_type_obj.code == 'dynamics':
-                            # !not ('30min', '30 минут')
-                            # !not slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
-                            # ('1d', '1 день')
-                            mins = 30 * i
-                            slot_date = start_datetime + timedelta(minutes=mins)
+                else: 
+                    if o_type_obj.code == 'dynamics':
+                        # !not ('30min', '30 минут')
+                        # !not slot_date = start_datetime + timedelta(minutes=(int(i)-1)*30)
+                        # ('1d', '1 день')
+                        mins = 30 * i
+                        slot_date = start_datetime + timedelta(minutes=mins)
+                        # if not already in there - APPEND
+                        if i not in slots_check:
                             slots_lst.append({
                                 'slot': i,
                                 'title': slot_date.strftime('%d-%m-%Y')
