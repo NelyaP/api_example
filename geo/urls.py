@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 from api.views import register, calculate, get_user_slots, \
-    get_user_poi, get_user_segment, get_user_cities
+    get_user_poi, get_user_segment, get_user_cities, get_slots
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -18,5 +18,6 @@ urlpatterns = [
     path('api/user-city/', get_user_cities),
     path('api/user-slot/', get_user_slots),
     path('api/user-poi/', get_user_poi),
-    path('api/user-segment/', get_user_segment)
+    path('api/user-segment/', get_user_segment),
+    path('api/slot/', get_slots)
 ]

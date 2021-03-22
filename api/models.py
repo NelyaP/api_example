@@ -50,6 +50,7 @@ class Account(AbstractBaseUser):
     phone = models.CharField('Mob. phone', max_length=50, blank=True, null=True)
     email = models.EmailField('E-mail', max_length=500, unique=True, blank=True, null=True)
     company = models.CharField('Company', max_length=250, blank=True, null=True)
+    inn = models.CharField('INN', max_length=100, blank=True, null=True)
     alias_name = models.CharField('Alias name', max_length=500, blank=True, null=True)
     first_name = models.CharField('First name', max_length=50, blank=True, null=True)
     last_name = models.CharField('Last name', max_length=50, blank=True, null=True)

@@ -50,6 +50,7 @@ class AccountSerializer(serializers.ModelSerializer):
             'phone',
             'email',
             'company',
+            'inn',
             'alias_name',
             'first_name',
             'last_name',

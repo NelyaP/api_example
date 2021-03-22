@@ -22,6 +22,7 @@ from utils.send_email import sp_send_simple_email
 
 import random
 import math
+import calendar
 from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
 
@@ -572,3 +573,51 @@ def calculate(request):
     }
 
     return Response(price, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])    
+@authentication_classes([JWTAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def get_slots(request):
+    if not 'o_type' in request.data \
+        or not request.data['o_type'] \
+        or request.data['o_type'] not in ['population', 'dynamics']:
+        
+        return Response({"message": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+    slots_lst = []
+    
+    USER_MONTH_FORMAT = "%m-%Y"
+    start_dt = datetime(2018, 1, 1, 0, 0, 0)
+    end_dt = datetime.now()
+    n_max = (12 * end_dt.year + end_dt.month) - (12 * start_dt.year + start_dt.month)
+    # dynamics #
+    dynamics_delta = timedelta(days=1)
+    dynamics_cnt = 1
+
+    for n in range(n_max):
+        dt = start_dt + relativedelta(months=+n)
+
+        if request.data['o_type'] == 'population':
+            sub_slots = str(n + 1)
+
+        if request.data['o_type'] == 'dynamics':
+            slots = []
+            dt_ini = dt
+            dt_end = dt + relativedelta(months=+1) + relativedelta(days=-1)
+            while dt_ini <= dt_end:
+                slots.append(str(dynamics_cnt*48))
+                dynamics_cnt += 1
+                dt_ini += dynamics_delta
+
+            sub_slots = ",".join(slots)
+        
+        slots_lst.append(
+            {
+                'n': n + 1 ,
+                'title': dt.strftime(USER_MONTH_FORMAT),
+                'sub_slots': sub_slots
+            }
+        )        
+    
+    return Response(slots_lst, status=status.HTTP_200_OK)
